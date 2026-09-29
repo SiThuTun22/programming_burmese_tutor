@@ -1,0 +1,96 @@
+# Book sources for Myanmar Programming Tutor MVP
+# Attribution: Ei Maung (eimaung.com), Saturngod (saturngod.net)
+# Academic/educational use only — do not redistribute extracted content without permission.
+
+books:
+  - id: saturngod_programming_basic
+    title: "Programming Basic"
+    author: Saturngod
+    format: html
+    base_url: https://pgbasic.saturngod.net/
+    chapter_pattern: "_pb{num}.html"
+    chapter_range: [1, 18]
+    domain: programming_basic
+    mvp_target_samples: 80
+
+  - id: saturngod_database_basic
+    title: "Database Basic"
+    author: Saturngod
+    format: html
+    base_url: https://dbbasic.saturngod.net/
+    chapter_pattern: "Chapter{num:02d}.html"
+    chapter_range: [1, 16]
+    intro_pages: ["01Intro.html"]
+    domain: database
+    mvp_target_samples: 60
+
+  - id: eimaung_javascript
+    title: "JavaScript - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/jsbook/JavaScript-Book-by-Ei-Maung.pdf
+    domain: javascript
+    mvp_target_samples: 50
+
+  - id: eimaung_php
+    title: "PHP - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/php/PHP-Book-by-Ei-Maung.pdf
+    domain: php
+    mvp_target_samples: 50
+
+  - id: eimaung_react
+    title: "React - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/react/React-book-by-Ei-Maung.pdf
+    domain: react
+    mvp_target_samples: 40
+
+  - id: eimaung_laravel
+    title: "Laravel - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/laravel/Laravel8-book-by-Ei-Maung.pdf
+    domain: laravel
+    mvp_target_samples: 40
+
+  - id: eimaung_api
+    title: "API - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/api/API-book-by-Ei-Maung.pdf
+    domain: api
+    mvp_target_samples: 30
+
+  - id: eimaung_bootstrap
+    title: "Bootstrap - On Point"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/bootstrap/Bootstrap5-book-by-Ei-Maung.pdf
+    domain: bootstrap
+    mvp_target_samples: 25
+
+  - id: eimaung_pwd2023
+    title: "Professional Web Developer 2023"
+    author: Ei Maung
+    format: pdf
+    url: https://eimaung.com/pwd2023/Professional-Web-Developer-2023.pdf
+    domain: pwd
+    mvp_target_samples: 25
+
+  - id: hlaing_dsa
+    title: "Data Structure & Algorithm In Burmese"
+    author: Hlaing Tin Htun
+    format: pdf
+    url: https://raw.githubusercontent.com/HlaingTinHtun/Data-Structure-Algorithm-In-Burmese/master/datastructures%26algorithms_v2.1.pdf
+    domain: dsa
+    mvp_target_samples: 80
+
+splits:
+  test_chapters_per_book: 2
+  val_chapters_per_book: 1
+  train: remainder
+
+language_suffix: "မြန်မာဘာသာဖြင့်သာ ရှင်းပြပါ"

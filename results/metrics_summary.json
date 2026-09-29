@@ -1,0 +1,30 @@
+{
+  "base": {
+    "count": 58,
+    "myanmar_script_ratio": 0.657,
+    "mix_penalty": 0.5368,
+    "heuristic_rubric_1_5": 4.087,
+    "instruction_follow_rate": 1.0,
+    "term_taing_misuse_count": 0,
+    "explain_code_count": 28,
+    "explain_code_term_taing_misuse_count": 0
+  },
+  "finetuned": {
+    "count": 58,
+    "myanmar_script_ratio": 0.6983,
+    "mix_penalty": 0.4924,
+    "heuristic_rubric_1_5": 4.2274,
+    "instruction_follow_rate": 1.0,
+    "term_taing_misuse_count": 0,
+    "explain_code_count": 28,
+    "explain_code_term_taing_misuse_count": 0
+  },
+  "delta": {
+    "delta_myanmar_script_ratio": 0.0413,
+    "delta_heuristic_rubric_1_5": 0.1404,
+    "delta_instruction_follow_rate": 0.0,
+    "delta_mix_penalty": -0.0444
+  },
+  "status": "real_ssh_eval",
+  "note": "Greedy inference on 58 held-out test prompts (dataset v0.5); finetuned adapter with inference guide in SFT user turns (LoRA r=16, max_new_tokens=384). term_taing_misuse_count uses terminology_lint on predictions (layout-only တစ်တန်း rule)."
+}

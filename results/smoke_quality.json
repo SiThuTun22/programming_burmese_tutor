@@ -1,0 +1,77 @@
+[
+  {
+    "question": "Python ဆိုတာ ဘာလဲ?",
+    "code": "",
+    "answer": "Python ဆိုတာကတော့ programming language တစ်ခုဖြစ်ပါတယ်။\n\nPython ဆိုတာ computer ကို ခိုင်းစေတဲ့ စကားဝှက် ဖြစ်ပါတယ်။\n\nPython က စရေးရ လွယ်တဲ့ programming language ဖြစ်ပါတယ်။\n\nဥပမာ print(\"Hello\") လို့ ရေးရင် screen ပေါ်မှာ Hello ထွက်ပါတယ်။"
+  },
+  {
+    "question": "list နဲ့ dict ဘာကွာလဲ?",
+    "code": "",
+    "answer": "list က တန်ဖိုးတွေကို စာရင်းအဖြစ် သိမ်းပြီး dict က key နဲ့ value တွဲ သိမ်းပါတယ်။\n\nlist က index နဲ့ ဖတ်ရ၊ dict က key နဲ့ ဖတ်ရပါတယ်။\n\nlist က ပြောင်းနိုင်၊ dict က မပြောင်းနိုင်ပါ။\n\nဥပမာ names = [\"Aung\", \"Min\"] လို့ ရေးနိုင်ပါတယ်။"
+  },
+  {
+    "question": "Fragment ဆိုတာ ဘာလဲ?",
+    "code": "",
+    "answer": "Fragment က HTML tag မထည့်ဘဲ element တွေကို စုထားခြင်း ဖြစ်ပါတယ်။\n\n<> </> သုံးပြီး အလိုအလျောက် ပိတ်ပါတယ်။\n\nUI ထပ်မထည့်ဘဲ စာရင်း ပိုမြန်ပါတယ်။\n\nဥပမာ <div className=\"container\"> က div နဲ့ container ကို ပေါင်းပါတယ်။"
+  },
+  {
+    "question": "Variable ဆိုတာ ဘာလဲ?",
+    "code": "",
+    "answer": "Variable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ နာမည်ပေးထားတဲ့ memory ထဲမှာ သိမ်းထားခြင်း ဖြစ်ပါတယ်။\n\nVariable ဆိုတာတော့ program ထဲမှာ တန်ဖိုးကို သိမ်းထားတဲ့ န"
+  },
+  {
+    "question": "for loop နဲ့ while loop ဘာကွာလဲ?",
+    "code": "",
+    "answer": "for loop က အကြိမ်ရေ သတ်မှတ်ပြီး while က အခြေအနေ မှန်နေသ၍ ဆက်ပါတယ်။\n\nfor က index နဲ့ အဆုံးသတ်ပါတယ်။\n\nwhile က အခြေအနေ ပြောင်းပြီးမှ ဆက်ပါတယ်။\n\nနှစ်ခုလုံး အလုပ်လုပ်နိုင်ပါတယ်။"
+  },
+  {
+    "question": "def က ဘာအတွက်လဲ?",
+    "code": "",
+    "answer": "def က function စရေးတဲ့ keyword ဖြစ်ပါတယ်။\n\ndef ဆိုတာ function စတင်ကြောင်း ပြပါတယ်။\n\nခေါ်လိုက်ရင် အလုပ်လုပ်ပါတယ်။\n\nဥပမာ def add(2, 3) က 5 ပေးပါတယ်။"
+  },
+  {
+    "question": "try except က ဘာကြောင့် လိုသလဲ?",
+    "code": "",
+    "answer": "try except က error တက်ရင် program မရပ်အောင် ကာကွယ်ပါတယ်။\n\ntry က အလုပ်လုပ်ပြီး except က မှားရင် ဖမ်းပါတယ်။\n\nမဖမ်းရင် program ရပ်ပါတယ်။\n\nဥပမာ 10 / 0 က ZeroDivisionError တက်ပါတယ်။"
+  },
+  {
+    "question": "SQL ဆိုတာ ဘာလဲ?",
+    "code": "",
+    "answer": "SQL ဆိုတာ database ထဲက data ကို ရှာ၊ ထည့်၊ ပြင်၊ ဖျက်တဲ့ language ဖြစ်ပါတယ်။\n\nSELECT က ရှာတာ၊ INSERT က ထည့်တာ၊ UPDATE က ပြင်တာ၊ DELETE က ဖျက်တာ ဖြစ်ပါတယ်။\n\nSQL က database တွေကို စည်းကမ်းနဲ့ ဆက်သွယ်ပါတယ်။\n\nဥပမာ SELECT name FROM students က နာမည်တွေ ရှာပါတယ်။"
+  },
+  {
+    "question": "useState hook ကို ဘယ်လို သုံးမလဲ?",
+    "code": "",
+    "answer": "useState က state ကို တန်ဖိုးအသစ်နဲ့ ပြန်ပေးပါတယ်။\n\nဖတ်ရ လွယ်ပါတယ်။\n\nပြောင်းရင် UI ရေတွက်ပါတယ်။\n\nဥပမာ count ကို တန်ဖိုးအသစ်နဲ့ ပြန်ပေးပါတယ်။"
+  },
+  {
+    "question": "HTML နဲ့ CSS ကွာခြားချက် ရှင်းပြပါ",
+    "code": "",
+    "answer": "HTML က ဖွဲ့စည်းပုံ၊ CSS က အလှ၊ JavaScript က အပြုအမူ ဖြစ်ပါတယ်။\n\nHTML က ပုံစံ၊ CSS က အသွင်၊ JavaScript က အလုပ် ဖြစ်ပါတယ်။\n\nHTML က ဖွဲ့စည်းပုံ၊ CSS က အသွင်၊ JavaScript က အလုပ် ဖြစ်ပါတယ်။\n\nHTML က ဖွဲ့စည်းပုံ၊ CSS က အသွင်၊ JavaScript က အလုပ် ဖြစ်ပါတယ်။\n\nဒီလို ရှင်းရင် အလုပ် ပိုလွယ်ပါတယ်။"
+  },
+  {
+    "question": "ဒီ Python code က ဘာလုပ်သလဲ?",
+    "code": "username = input(\"What is your name ? : \")\nprint(\"Your name is \", username)",
+    "answer": "ဒီ code က နာမည်ယူပြီး ပြပါတယ်။\n\ninput က စာသား တောင်းပါတယ်။\n\nprint က Your name is ကို ထည့်ပါတယ်။\n\nဥပမာ John ဆိုရင် Your name is John ထွက်ပါတယ်။"
+  },
+  {
+    "question": "None ဆိုတာ ဘာလဲ?",
+    "code": "",
+    "answer": "None ဆိုတာ တန်ဖိုး မရှိကြောင်း ပြတဲ့ special value ဖြစ်ပါတယ်။\n\nfunction က return မလုပ်ရင် None ပြန်ပါတယ်။\n\nဗလာစာသား \"\" နဲ့ မတူပါ။\n\nဥပမာ print(None) က None ထွက်ပါတယ်။"
+  },
+  {
+    "question": "class နဲ့ instance ဘာကွာလဲ?",
+    "code": "",
+    "answer": "class က ပုံစံ၊ instance က အ具体 ဖြစ်ပါတယ်။\n\nclass က object တည်ဆောက်တဲ့ ပုံစံ ဖြစ်ပါတယ်။\n\ninstance က class ထဲက data ကို သိမ်းပါတယ်။\n\nဥပမာ Dog class ကနေ Buddy instance တည်ဆောက်နိုင်ပါတယ်။"
+  },
+  {
+    "question": "Compiler နဲ့ interpreter ဘာကွာလဲ?",
+    "code": "",
+    "answer": "Compiler က code ကို အရင်က ဖတ်ပြီး execute လုပ်ထားပြီး interpreter က တစ်ကြောင်းချင်း ဖတ်ပြီး အလုပ်လုပ်ပါတယ်။\n\nPython က interpreter သုံးပါတယ်။\n\nC က compiler နဲ့ ပြီးရင် run နိုင်ပါတယ်။\n\nနှစ်ခုလုံး စမ်းရ လွယ်ပါတယ်။"
+  },
+  {
+    "question": "Indentation က ဘာကြောင့် အရေးကြီးလဲ?",
+    "code": "",
+    "answer": "Indentation က Python မှာ block ခွဲတာ ဖြစ်ပါတယ်။\n\nခွဲလိုတဲ့နေရာမှာ 4 space သုံးပါတယ်။\n\nမှားရင် SyntaxError တက်ပါတယ်။\n\nဥပမာ if ထဲက code တွေကို 4 space နဲ့ ခွဲပါတယ်။"
+  }
+]

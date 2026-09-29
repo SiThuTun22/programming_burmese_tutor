@@ -1,0 +1,54 @@
+[project]
+name = "myanmar-programming-tutor"
+version = "0.3.0"
+description = "Myanmar web programming tutor — dataset, QLoRA training, and Gradio UI"
+readme = "README.md"
+requires-python = ">=3.12"
+
+[project.optional-dependencies]
+data = [
+    "beautifulsoup4>=4.12.0",
+    "requests>=2.31.0",
+    "pymupdf>=1.24.0",
+    "pdfplumber>=0.11.0",
+    "pyyaml>=6.0.0",
+    "jsonschema>=4.22.0",
+    "tqdm>=4.66.0",
+]
+train = [
+    "torch",
+    "transformers>=4.51.0",
+    "peft>=0.15.0",
+    "trl>=0.15.0,<0.25.0",
+    "bitsandbytes>=0.45.0",
+    "accelerate>=1.0.0",
+    "datasets>=3.0.0",
+    "matplotlib>=3.8.0",
+    "huggingface_hub>=0.26.0",
+]
+app = [
+    "gradio>=4.0",
+    "edge-tts>=6.1",
+    "litestar>=2.0",
+    "uvicorn[standard]>=0.30",
+    "pytest>=8.0",
+    "python-dotenv>=1.0.0",
+    "httpx>=0.27.0",
+]
+kaggle = [
+    "transformers>=4.44.0",
+    "peft>=0.12.0",
+    "trl>=0.9.0,<0.25.0",
+    "bitsandbytes>=0.43.0",
+    "accelerate>=0.33.0",
+    "datasets>=2.20.0",
+    "matplotlib>=3.8.0",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu124"
+url = "https://download.pytorch.org/whl/cu124"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu124" }

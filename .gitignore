@@ -1,0 +1,27 @@
+# Python
+.cache/
+__pycache__/
+*.py[cod]
+.env
+.venv/
+venv/
+
+# Data caches and large binaries
+data/raw/pdf_cache/
+*.pdf
+
+# Model outputs
+outputs/
+lora_adapter/
+*.pt
+*.bin
+*.safetensors
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Kaggle
+/kaggle/
