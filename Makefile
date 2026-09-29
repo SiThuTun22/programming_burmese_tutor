@@ -1,4 +1,4 @@
-.PHONY: data train eval chat serve serve-api app preflight check smoke smoke-quality test sync sync-data
+.PHONY: data train eval chat serve serve-api app preflight check smoke smoke-quality test sync sync-data download-adapter upload-adapter
 
 UV ?= uv
 PYTHON ?= $(UV) run python
@@ -28,6 +28,12 @@ chat:
 
 preflight:
 	$(PYTHON) scripts/preflight_tutor.py
+
+download-adapter:
+	$(PYTHON) scripts/download_adapter.py
+
+upload-adapter:
+	$(PYTHON) scripts/upload_adapter.py
 
 app: preflight
 	$(PYTHON) scripts/serve_gradio.py

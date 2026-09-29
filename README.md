@@ -15,12 +15,25 @@ make app    # http://0.0.0.0:7860
 
 Open the URL, ask a question, enable **Read aloud** for Myanmar speech (edge-tts; needs internet).
 
-You need the LoRA adapter at `outputs/lora_adapter/` (`make train` or copy onto the host). It is gitignored.
+The LoRA adapter at `outputs/lora_adapter/` is **gitignored**. On a GPU host, run `uv run python scripts/download_adapter.py` (see `TUTOR_ADAPTER_HF_REPO` in `.env.example`) or `make train`.
+
+**Mac / laptop (M2, no CUDA):** develop with `uv sync --extra data` and `make check`; demo Gradio via SSH tunnel to a GPU server. Full steps: [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md).
+
+### Clone on a new machine
+
+```bash
+git clone https://github.com/SiThuTun22/programming_burmese_tutor.git
+cd programming_burmese_tutor
+uv sync --extra app --extra data   # Mac dev only: --extra data
+cp .env.example .env
+uv run python scripts/download_adapter.py   # CUDA host before make app
+make preflight && make app
+```
 
 ### Checklist
 
 - [ ] `uv sync --extra app` and `cp .env.example .env`
-- [ ] `outputs/lora_adapter/` on the GPU host
+- [ ] `outputs/lora_adapter/` (download script or train)
 - [ ] Only **one** GPU-heavy process (no `make train` while `make app` runs)
 - [ ] `make check` (Python tests + dataset validate)
 - [ ] `make smoke` (one GPU generation)
@@ -74,4 +87,5 @@ If you change [`data/inference_prompt.md`](data/inference_prompt.md), rerun `scr
 | `make serve-api` | Litestar API (optional) |
 | `make chat` | CLI |
 | `make train` / `make eval` | Fine-tune and metrics |
+| `make download-adapter` / `make upload-adapter` | Hugging Face LoRA (not in git) |
 | `make check` | Tests + dataset validate |
