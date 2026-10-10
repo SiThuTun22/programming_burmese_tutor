@@ -14,10 +14,7 @@ from tutor.env_bootstrap import load_project_env
 
 load_project_env()
 
-import torch
-
-from tutor.config import ADAPTER_PATH, BASE_MODEL, MAX_NEW_TOKENS
-from tutor.engine import TutorEngine
+from tutor.hybrid import TutorLike, create_engine
 
 
 def read_optional_code() -> str:
@@ -38,10 +35,6 @@ def read_optional_code() -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Myanmar programming tutor CLI")
-    parser.add_argument("--base", action="store_true", help="Use base model without LoRA")
-    parser.add_argument("--model", default=BASE_MODEL)
-    parser.add_argument("--adapter", type=Path, default=ADAPTER_PATH)
-    parser.add_argument("--max-new-tokens", type=int, default=MAX_NEW_TOKENS)
     parser.add_argument("--question", help="Single question (non-interactive)")
     parser.add_argument("--code", default="", help="Optional code for --question")
     parser.add_argument(
@@ -52,7 +45,7 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def generate_answer(engine: TutorEngine, question: str, code: str) -> str:
+def generate_answer(engine: TutorLike, question: str, code: str) -> str:
     print("Generating answer…", flush=True)
     return engine.answer(question, code)
 
@@ -64,12 +57,7 @@ def main() -> None:
         code_from_file = args.code_file.read_text(encoding="utf-8")
 
     try:
-        engine = TutorEngine(
-            base_model=args.model,
-            adapter_path=args.adapter,
-            max_new_tokens=args.max_new_tokens,
-            use_adapter=not args.base,
-        )
+        engine = create_engine()
     except (RuntimeError, FileNotFoundError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         raise SystemExit(1) from exc
@@ -79,7 +67,7 @@ def main() -> None:
         print(generate_answer(engine, args.question, code))
         return
 
-    print("Myanmar programming tutor (empty question to quit)")
+    print("MIIT Programming Tutor (empty question to quit)")
     while True:
         try:
             question = input("\nQuestion: ").strip()
@@ -94,9 +82,6 @@ def main() -> None:
         except KeyboardInterrupt:
             print("\n(cancelled)\n", flush=True)
             continue
-        except torch.OutOfMemoryError:
-            print("GPU out of memory.", file=sys.stderr)
-            raise SystemExit(1)
 
 
 if __name__ == "__main__":

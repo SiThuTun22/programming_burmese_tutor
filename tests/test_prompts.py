@@ -1,82 +1,80 @@
-"""Prompt formatting tests (no GPU / model load)."""
+"""Tutor prompt delivery lines (no live API)."""
 
-from __future__ import annotations
-
-import sys
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT))
-
-from tutor.config import LANG_SUFFIX
+from tutor.knowledge import KnowledgeChunk
 from tutor.prompts import (
-    append_inference_guide,
-    build_messages,
-    build_messages_from_row,
-    build_user_content,
-    guide_marker,
-    inference_guide_text,
-    load_inference_guide,
+    ANTI_COPY_LINE,
+    CONTINUE_STYLE,
+    ENGLISH_NAMES_LINE,
+    FOLLOW_THREAD_LINE,
+    MIIT_FOCUS_LINE,
+    MIIT_PAPERS_LINE,
+    MIIT_PROGRAM_LINE,
+    MIIT_WORDING_STYLES,
+    PERSON_PRONOUN_LINE,
+    PROGRAMMING_STYLES,
+    build_general_tutor_messages,
+    build_miit_messages,
 )
-from tutor.prompts import _parse_sections, _bullets_to_text
 
 
-def test_appends_language_suffix():
-    text = build_user_content("React ဆိုတာ ဘာလဲ?")
-    assert LANG_SUFFIX in text
-    assert guide_marker() in text
+def test_general_prompt_includes_anti_copy_and_style(monkeypatch) -> None:
+    monkeypatch.setattr("tutor.prompts.secrets.choice", lambda seq: seq[1])
+    content = build_general_tutor_messages("Fragment ဆိုတာ ဘာလဲ?")[0]["content"]
+    assert ANTI_COPY_LINE in content
+    assert PERSON_PRONOUN_LINE in content
+    assert "Dr. Cynthia Myint" in PERSON_PRONOUN_LINE
+    assert "ဒေါ်စင်သီယာမြင့်" not in PERSON_PRONOUN_LINE
+    assert ENGLISH_NAMES_LINE in content
+    assert PROGRAMMING_STYLES[1][1] in content
+    assert PROGRAMMING_STYLES[0][1] not in content
 
 
-def test_does_not_duplicate_suffix():
-    q = f"Hello? {LANG_SUFFIX}"
-    assert build_user_content(q).count(LANG_SUFFIX) == 1
+def test_miit_prompt_anti_copy_without_programming_styles(monkeypatch) -> None:
+    monkeypatch.setattr("tutor.prompts.secrets.choice", lambda seq: seq[1])
+    chunk = KnowledgeChunk(
+        id="role",
+        text="Cynthia Myint teaches at MIIT.",
+        sources=("https://example.com/cynthia",),
+        tokens=frozenset(),
+    )
+    content = build_miit_messages("Cynthia Myint ဆိုတာ ဘယ်သူလဲ?", [chunk])[0]["content"]
+    assert ANTI_COPY_LINE in content
+    assert PERSON_PRONOUN_LINE in content
+    assert ENGLISH_NAMES_LINE in content
+    assert MIIT_FOCUS_LINE in content
+    assert MIIT_PAPERS_LINE in content
+    assert MIIT_PROGRAM_LINE in content
+    assert "နှစ်ကျော်မသွားပါနှင့်" in MIIT_PROGRAM_LINE
+    assert "အပြည့်အစုံ မေးမှသာ" not in MIIT_PROGRAM_LINE
+    assert "ကြော်ငြာပုံ မရေးပါနှင့်" in content
+    for _name, line in PROGRAMMING_STYLES:
+        assert line not in content
+    assert MIIT_WORDING_STYLES[1][1] in content
+    teaching = dict(MIIT_WORDING_STYLES)["teaching"]
+    assert "သင်ကြားရေးအကြောင်းကို အရင် ပြောပါ" not in teaching
+    assert "အရင် ပြောပါ" not in teaching
+    assert "ခန့်မှန်းမရေးပါနှင့်" in content
+    assert "Cynthia Myint teaches at MIIT." in content
+    assert "https://example.com/cynthia" in content
 
 
-def test_does_not_duplicate_guide():
-    text = build_user_content("React ဆိုတာ ဘာလဲ?")
-    again = append_inference_guide(text, has_code=False)
-    assert again == text
-
-
-def test_code_fence_and_with_code_guide():
-    text = build_user_content("ရှင်းပြပါ", "print(1)")
-    assert "```\nprint(1)\n```" in text
-    guides = load_inference_guide()
-    assert guides["with_code"] in text
-
-
-def test_concept_without_code_guide_only_general():
-    text = build_user_content("IDE ဆိုတာ ဘာလဲ?")
-    guides = load_inference_guide()
-    assert guides["general"] in text
-    assert guides["with_code"] not in text
-
-
-def test_build_messages_role():
-    msgs = build_messages("Variable ဆိုတာ ဘာလဲ?")
-    assert msgs[0]["role"] == "user"
-    assert LANG_SUFFIX in msgs[0]["content"]
-
-
-def test_row_matches_chat_format():
-    row = {
-        "instruction": f"ဒီ code ကို ရှင်းပြပါ။ {LANG_SUFFIX}",
-        "input": "x = 1",
-        "output": "dummy",
-    }
-    msgs = build_messages_from_row(row)
-    direct = build_user_content("ဒီ code ကို ရှင်းပြပါ။", "x = 1")
-    assert msgs[0]["content"] == direct
-
-
-def test_parse_inference_sections():
-    md = "## general\n\n- Line one.\n\n## with_code\n\n- Line two."
-    sections = _parse_sections(md)
-    assert _bullets_to_text(sections["general"]) == "Line one."
-    assert _bullets_to_text(sections["with_code"]) == "Line two."
-
-
-def test_inference_guide_text_flag():
-    assert inference_guide_text(False)
-    with_code = inference_guide_text(True)
-    assert len(with_code) > len(inference_guide_text(False))
+def test_miit_followup_uses_continue_style(monkeypatch) -> None:
+    monkeypatch.setattr(
+        "tutor.prompts.secrets.choice",
+        lambda seq: seq[0],
+    )
+    chunk = KnowledgeChunk(
+        id="role",
+        text="Cynthia Myint teaches at MIIT.",
+        sources=("https://example.com/cynthia",),
+        tokens=frozenset(),
+    )
+    history = [{"question": "Cynthia Myint ဆိုတာ ဘယ်သူလဲ?", "answer": "MIIT professor"}]
+    content = build_miit_messages(
+        "သူမ ဘာတွေ သုတေသနလုပ်လဲ?",
+        [chunk],
+        history=history,
+    )[0]["content"]
+    assert FOLLOW_THREAD_LINE in content
+    assert CONTINUE_STYLE[1] in content
+    assert "ရာထူးနှင့် လုပ်ရာနေရာ" not in content

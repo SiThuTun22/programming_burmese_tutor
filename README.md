@@ -1,42 +1,24 @@
-# Myanmar Web Programming Tutor
+# MIIT Programming Tutor
 
-NLP course MVP: v0.4 book-first Myanmar dataset, QLoRA on Gemma-3-4B-IT, evaluation, and a **Gradio web UI** with edge-tts read-aloud.
-
-**Research write-up:** [REPORT.md](REPORT.md)
+Burmese answers for programming questions and for MIIT faculty, campus, and curriculum from local notes. Programming goes straight to Gemini. MIIT-like questions retrieve `data/miit` with **gemini-embedding-001** after `make miit-index`.
 
 ## Quick start
 
 ```bash
-uv sync --extra app --extra train
-cp .env.example .env   # edit values here; do not export in the shell
+uv sync --extra app
+cp .env.example .env   # set GEMINI_API_KEY
+make miit-index        # embed MIIT notes (needs network + API key)
 make preflight
-make app    # http://0.0.0.0:7860
+make app    # http://127.0.0.1:7860
 ```
 
-Open the URL, ask a question, enable **Read aloud** for Myanmar speech (edge-tts; needs internet).
+After you edit `data/miit/*.jsonl`, run `make miit-index` again.
 
-The LoRA adapter at `outputs/lora_adapter/` is **gitignored**. On a GPU host, run `uv run python scripts/download_adapter.py` (see `TUTOR_ADAPTER_HF_REPO` in `.env.example`) or `make train`.
+Open the URL and ask a question. Click the ear under a reply to hear it (edge-tts; needs internet). Gemini chat needs a VPN where Google APIs are blocked.
 
-**Mac / laptop (M2, no CUDA):** develop with `uv sync --extra data` and `make check`; demo Gradio via SSH tunnel to a GPU server. Full steps: [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md).
+Chats are logged locally to `results/tutor_sessions.jsonl` (gitignored).
 
-### Clone on a new machine
-
-```bash
-git clone https://github.com/SiThuTun22/programming_burmese_tutor.git
-cd programming_burmese_tutor
-uv sync --extra app --extra data   # Mac dev only: --extra data
-cp .env.example .env
-uv run python scripts/download_adapter.py   # CUDA host before make app
-make preflight && make app
-```
-
-### Checklist
-
-- [ ] `uv sync --extra app` and `cp .env.example .env`
-- [ ] `outputs/lora_adapter/` (download script or train)
-- [ ] Only **one** GPU-heavy process (no `make train` while `make app` runs)
-- [ ] `make check` (Python tests + dataset validate)
-- [ ] `make smoke` (one GPU generation)
+Mac setup: [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md). Step-by-step ask path: [docs/WORKFLOW.md](docs/WORKFLOW.md).
 
 ## Other ways to run
 
@@ -57,35 +39,13 @@ curl -s -X POST http://localhost:8001/v1/chat \
 
 Optional `TUTOR_API_KEY` for `POST /v1/chat`. `code` field max ~16k characters.
 
-### Troubleshooting GPU memory
-
-If the app fails with **“Some modules are dispatched on the CPU or the disk”**:
-
-1. Run only **one** GPU job at a time.
-2. `nvidia-smi` and `make preflight` (~5 GiB free).
-3. `fuser -v /dev/nvidia0` and kill stale PIDs.
-4. Retry `make app`.
-
-## Setup details
-
-CUDA PyTorch: `pytorch-cu124` index in [`pyproject.toml`](pyproject.toml). Env loaded via [`tutor/config.py`](tutor/config.py).
-
-Dataset-only (no GPU):
-
-```bash
-uv sync --extra data
-make data
-```
-
-If you change [`data/inference_prompt.md`](data/inference_prompt.md), rerun `scripts/build_chat_format.py` and `make train`.
-
 ## Makefile targets
 
 | Target | Purpose |
 |--------|---------|
 | `make app` / `make serve` | Gradio UI |
-| `make serve-api` | Litestar API (optional) |
+| `make serve-api` | Litestar API |
 | `make chat` | CLI |
-| `make train` / `make eval` | Fine-tune and metrics |
-| `make download-adapter` / `make upload-adapter` | Hugging Face LoRA (not in git) |
-| `make check` | Tests + dataset validate |
+| `make test` | Python tests |
+| `make miit-index` | Build `data/miit/index.json` from JSONL notes |
+| `make smoke-hybrid` | 15-prompt Gemini smoke |

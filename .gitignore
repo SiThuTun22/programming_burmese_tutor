@@ -6,22 +6,18 @@ __pycache__/
 .venv/
 venv/
 
-# Data caches and large binaries
-data/raw/pdf_cache/
-*.pdf
-
-# Model outputs
+# Local model leftovers (not used by Gemini chat)
 outputs/
-lora_adapter/
 *.pt
 *.bin
 *.safetensors
 
-# Jupyter
-.ipynb_checkpoints/
+# MIIT embedding index (run make miit-index)
+data/miit/index.json
+
+# Demo transcripts and saved chats (local only)
+results/*.jsonl
+results/chats.json
 
 # OS
 .DS_Store
-
-# Kaggle
-/kaggle/

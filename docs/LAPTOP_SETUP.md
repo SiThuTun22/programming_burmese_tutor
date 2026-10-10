@@ -1,72 +1,36 @@
-# Laptop setup (Mac M2, clone from GitHub)
+# Laptop setup (Mac M2, 8 GB)
 
-Use this when you develop on a **MacBook** (or any machine without NVIDIA CUDA) and run inference on a **GPU server** or **Kaggle**.
+The MIIT programming tutor is Gemini chat. It does not load a local model. VPN is required for Gemini where Google APIs are blocked.
 
 ## What GitHub includes
 
-- Source code, tests, dataset JSONL (`data/gold`, `data/processed`, `data/raw` extracts)
-- **Not** in git: `.env`, `.venv`, PDF cache, `outputs/` (LoRA weights), Hugging Face base-model cache
+- Source code, MIIT notes, and tests
+- **Not** in git: `.env`, `.venv`, `data/miit/index.json`, demo transcripts in `results/`
 
-## Clone and develop on Mac (no GPU)
+## Mac demo
 
-```bash
-git clone https://github.com/SiThuTun22/programming_burmese_tutor.git
-cd programming_burmese_tutor
-uv sync --extra data
-cp .env.example .env
-make check
+1. Get a free key at [Google AI Studio](https://aistudio.google.com/).
+2. `uv sync --extra app`
+3. `cp .env.example .env` and set:
+
+```
+TUTOR_BACKEND=hybrid
+HYBRID_CHAT_PROVIDER=gemini
+GEMINI_API_KEY=your_key
+GEMINI_API_KEY_FALLBACK=your_second_key
+GEMINI_MODEL=gemini-2.0-flash
+TUTOR_CLOUD_MAX_TOKENS=3072
 ```
 
-`make check` runs tests and dataset validation without loading Gemma.
+4. `make miit-index` (embeds `data/miit/*.jsonl`; needs the same API key)
+5. `make preflight && make app` → **http://localhost:7860**
 
-This repo’s tutor app requires **CUDA** ([`tutor/model.py`](../tutor/model.py)). Do not expect `make app` to work on Apple Silicon with 8 GB RAM.
+Programming questions use the tutor prompt. MIIT faculty notes use embedding retrieval when similarity is high enough.
 
-## LoRA adapter (not in GitHub)
+Optional: `make smoke-hybrid` (15 prompts; calls the chat API).
 
-Download the fine-tuned adapter into `outputs/lora_adapter/` on any **CUDA** host:
+Free-tier rate limits apply.
 
-```bash
-uv sync --extra app
-cp .env.example .env
-# set HF_TOKEN if the Hub repo is private
-# set TUTOR_ADAPTER_HF_REPO=SiThuTun22/programming-burmese-tutor-lora
-uv run python scripts/download_adapter.py
-```
+### Fallback: OpenRouter chat
 
-Or train again: `make train` (Kaggle: [`notebooks/01_train_qlora.ipynb`](../notebooks/01_train_qlora.ipynb)).
-
-Upload from a machine that already has `outputs/lora_adapter/` (requires `HF_TOKEN` in `.env`):
-
-```bash
-make upload-adapter
-# or: uv run python scripts/upload_adapter.py --repo SiThuTun22/programming-burmese-tutor-lora
-```
-
-## Live demo from Mac browser (GPU on server)
-
-1. On the GPU server: `make app` (after adapter is present).
-2. On the Mac, SSH port-forward:
-
-   ```bash
-   ssh -L 7860:localhost:7860 YOUR_USER@YOUR_GPU_HOST
-   ```
-
-3. Open **http://localhost:7860** in the browser.
-
-## Kaggle training
-
-1. Push this repo to GitHub (or zip as a Kaggle Dataset).
-2. Open [`notebooks/01_train_qlora.ipynb`](../notebooks/01_train_qlora.ipynb) with GPU + Internet.
-3. After training, upload `/kaggle/working/lora_adapter` to Hugging Face (`scripts/upload_adapter.py` locally) or attach as a Kaggle Dataset for [`notebooks/02_eval_inference.ipynb`](../notebooks/02_eval_inference.ipynb).
-
-## New CUDA machine checklist
-
-```bash
-git clone https://github.com/SiThuTun22/programming_burmese_tutor.git
-cd programming_burmese_tutor
-uv sync --extra app --extra train
-cp .env.example .env
-uv run python scripts/download_adapter.py
-make preflight
-make app
-```
+Set `HYBRID_CHAT_PROVIDER=openrouter`, `OPENROUTER_API_KEY`, and a `:free` `OPENROUTER_MODEL`. Free routes can be slow or rate-limited.

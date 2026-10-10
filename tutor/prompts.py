@@ -1,134 +1,184 @@
-"""User prompts aligned with SFT chat format."""
+"""Gemini tutor prompt. Programming answers are not taken from stored Q&A."""
 
 from __future__ import annotations
 
-import re
-from functools import lru_cache
+import secrets
 
-from tutor.config import (
-    INFERENCE_PROMPT_PATH,
-    LANG_SUFFIX,
-    STYLE_GUIDE_ENABLED,
+ANSWER_CUE = "ဆရာ့အဖြေ:"
+ANTI_COPY_LINE = (
+    "ကျောင်းသားက အရင်မေးခွန်းကို ပြန်မေးရင် စကားလုံးချင်းတူအောင် မကူးပါနှင့်။ "
+    "အဓိပ္ပာယ်တူရင်တောင် ဝါကျနဲ့ ဥပမာကို ပြောင်းရေးပါ။"
+)
+PERSON_PRONOUN_LINE = (
+    "လူကို ၎င်း လို့ မခေါ်ပါနှင့်။ မလေးစားရာ ရောက်ပါသည်။ "
+    "အမျိုးသမီးကို သူမ၊ အမျိုးသားကို သူ၊ သို့မဟုတ် နာမည် (ဥပမာ Dr. Cynthia Myint) ကို ထပ်သုံးပါ။ "
+    "၎င်း ကို အရာဝတ္ထုအတွက်သာ သုံးပါ။ ဆရာ/ကျောင်းသားကို မသုံးပါနှင့်။"
+)
+ENGLISH_NAMES_LINE = (
+    "လူ၊ အဖွဲ့အစည်း၊ brand၊ ကုမ္ပဏီ၊ ကျောင်း၊ ဆေးရုံ၊ ဂျာနယ် အမည်များကို အင်္ဂလိပ်လိုသာ ရေးပါ။ "
+    "ဥပမာ Dr. Cynthia Myint, Dr. Win Aye, MIIT, IIIT-B, UCSM, ResearchGate။ "
+    "ဒေါက်တာစင်သီယာမြင့်၊ ဒေါက်တာဆင်သီယာမြင့်၊ ဒေါ်စင်သီယာမြင့် လို့ မရေးပါနှင့်။ "
+    "ပါမောက္ခ၊ ပါမောက္ခချုပ် ကဲ့သို့ ရာထူးကို မြန်မာလို ထားပြီး နာမည်ကို အင်္ဂလိပ်လို ချိတ်ပါ (ဥပမာ ပါမောက္ခချုပ် Dr. Win Aye)။"
+)
+MIIT_FOCUS_LINE = (
+    "ကျောင်းသား မေးသည့် အချက်ကို အရင် ဖြေပါ။ ဘယ်သူ / who မေးရင် ပထမဝါကျမှာ နာမည်၊ ရာထူး၊ လုပ်ရာနေရာ "
+    "(ဥပမာ ပါမောက္ခ Dr. Cynthia Myint သည် MIIT တွင် ပါမောက္ခ ဖြစ်သည်) ကို ရေးပါ။ "
+    "MIIT သင်ကြားရေး အရည်အသွေး၊ MIIT မှာ သင်ကြားရေးနဲ့ ပတ်သက်ပြီး၊ သို့မဟုတ် တက္ကသိုလ် ချီးမွမ်းချက်ဖြင့် မဖွင့်ပါနှင့်။ "
+    "တက္ကသိုလ်အကြောင်း မေးမှသာ အင်စတီကျု့ကို အဓိကထားပါ။ သင်ကြားခဲ့သည့် နှစ်နှင့် UCSM ကို ကိုယ်ရေးမှတ်တမ်းအဖြစ်သာ ထည့်ပါ။ MIIT ပညာရေးကို သုံးသပ်ချက် မရေးပါနှင့်။"
+)
+MIIT_PAPERS_LINE = (
+    "စာတမ်း / papers / detail မေးရင် ဘယ်သူကို ပထမဝါကျမှာ ဖြေပြီးမှ မှတ်တမ်းထဲက စာတမ်း တစ်ပုဒ်ချင်းစီကို "
+    "အင်္ဂလိပ် ခေါင်းစဉ်၊ ဂျာနယ်/ခုနှစ်၊ တွဲဖက်ရေးသားသူ၊ နည်းလမ်း၊ ကိန်းဂဏန်းများဖြင့် ရေးပါ။ "
+    "ခေါင်းစဉ် မရေးဘဲ ResearchGate မှာ ကြည့်ပါ လို့ အစားမထိုးပါနှင့်။ URL များကို အဆုံးတွင်သာ ထားပါ။ "
+    "မှတ်တမ်းမှာ မပါသော စာတမ်းကို မထွင်ပါနှင့်။"
+)
+MIIT_PROGRAM_LINE = (
+    "သင်တန်း / semester / ဘာသာရပ် မေးရင် မှတ်တမ်းထဲက ပညာသင်နှစ်နှင့် semester အလိုက် "
+    "အင်္ဂလိပ် ဘာသာရပ်ကုဒ်၊ အမည်၊ credits ဖြင့် ဖြေပါ။ "
+    "အသေးစိတ် / အပြည့် / more မေးရင် မှတ်တမ်းထဲက ပညာသင်နှစ်အားလုံးနှင့် semester တိုင်းကို "
+    "ရေးပါ။ နှစ်ကျော်မသွားပါနှင့်။ ပြီးမှ electives နှင့် Capstone ကို ဆက်ပါ။ "
+    "မှတ်တမ်းမှာ မပါသော ဘာသာရပ် သို့မဟုတ် elective ကုဒ်ကို မထွင်ပါနှင့်။"
+)
+FOLLOW_THREAD_LINE = (
+    "ဤမေးခွန်းသည် အရင် စကားပြော၏ follow-up ဖြစ်သည်။ အခု မေးသည့် အချက်ကိုသာ ဖြေပါ။ "
+    "အရင် စကားပြောကို သုံးပါ။ လူ သို့မဟုတ် ခေါင်းစဉ်ကို ပြန်မိတ်ဆက်ပြီး ကိုယ်ရေးအကျဉ်း သို့မဟုတ် URL များကို "
+    "ထပ်မပေးပါနှင့်။ မေးမှသာ ထည့်ပါ။ သူမ / သူ / အဲဒါ ကို နောက်ဆုံး နာမည်မှ ယူပါ။"
+)
+CONTINUE_STYLE: tuple[str, str] = (
+    "continue",
+    "အရင်အဖြေကို ဆက်ပါ။ အသစ်စတင်သလို မရေးပါနှင့်။",
+)
+PROGRAMMING_STYLES: tuple[tuple[str, str], ...] = (
+    ("analogy", "ဒီတစ်ခါ နေ့စဉ်ဘဝ ဥပမာတစ်ခုနဲ့ အရင် ရှင်းပါ။"),
+    ("example", "ဒီတစ်ခါ တိုတို code ဥပမာတစ်ခုကို အရင် ပြပြီးမှ ရှင်းပါ။"),
+    ("mistake", "ဒီတစ်ခါ စတင်သူ မကြာခဏ မှားတဲ့ အချက်ကို အရင်ပြောပြီးမှ မှန်ကန်ပုံကို ရှင်းပါ။"),
+)
+MIIT_WORDING_STYLES: tuple[tuple[str, str], ...] = (
+    (
+        "role",
+        "ပထမဝါကျမှာ မေးခွန်းကို ဖြေပြီးမှ ရာထူးနှင့် လုပ်ရာနေရာ အသေးစိတ်ကို ဆက်ပါ။ "
+        "မှတ်တမ်းထဲက အချက်သာ သုံးပါ။ ဥပမာအသစ် မထွင်ပါနှင့်။",
+    ),
+    (
+        "research",
+        "ပထမဝါကျမှာ မေးခွန်းကို ဖြေပြီးမှ သုတေသန အသေးစိတ်ကို ဆက်ပါ။ "
+        "မှတ်တမ်းထဲက အချက်သာ သုံးပါ။ ဥပမာအသစ် မထွင်ပါနှင့်။",
+    ),
+    (
+        "teaching",
+        "ပထမဝါကျမှာ မေးခွန်းကို ဖြေပြီးမှ သင်ကြားခဲ့သည့် နှစ်နှင့် UCSM ကို ကိုယ်ရေးအချက်အလက်အဖြစ်သာ ဆက်ပါ။ "
+        "MIIT ပညာရေး အရည်အသွေးကို မချီးမွမ်းပါနှင့်။ မှတ်တမ်းထဲက အချက်သာ သုံးပါ။ ဥပမာအသစ် မထွင်ပါနှင့်။",
+    ),
 )
 
-_SECTION_RE = re.compile(r"^##\s+(\S+)\s*$", re.MULTILINE)
 
-
-def _parse_sections(markdown: str) -> dict[str, str]:
-    sections: dict[str, str] = {}
-    current: str | None = None
-    lines: list[str] = []
-    for line in markdown.splitlines():
-        match = _SECTION_RE.match(line)
-        if match:
-            if current is not None:
-                sections[current] = "\n".join(lines).strip()
-            current = match.group(1).lower()
-            lines = []
-        elif current is not None:
-            lines.append(line)
-    if current is not None:
-        sections[current] = "\n".join(lines).strip()
-    return sections
-
-
-def _bullets_to_text(section: str) -> str:
-    parts: list[str] = []
-    for line in section.splitlines():
-        line = line.strip()
-        if line.startswith("- "):
-            parts.append(line[2:].strip())
-    return " ".join(parts)
-
-
-@lru_cache(maxsize=1)
-def load_inference_guide() -> dict[str, str]:
-    raw = INFERENCE_PROMPT_PATH.read_text(encoding="utf-8")
-    parsed = _parse_sections(raw)
-    return {
-        "general": _bullets_to_text(parsed.get("general", "")),
-        "with_code": _bullets_to_text(parsed.get("with_code", "")),
-    }
-
-
-def inference_guide_text(has_code: bool) -> str:
-    guides = load_inference_guide()
-    general = guides.get("general", "").strip()
-    if not general:
-        return ""
-    if has_code:
-        extra = guides.get("with_code", "").strip()
-        if extra:
-            return f"{general} {extra}"
-    return general
-
-
-def guide_marker() -> str:
-    """Substring used to detect whether the guide was already appended."""
-    guides = load_inference_guide()
-    general = guides.get("general", "").strip()
-    if len(general) >= 24:
-        return general[:24]
-    return general
-
-
-def append_inference_guide(text: str, *, has_code: bool) -> str:
-    if not STYLE_GUIDE_ENABLED:
-        return text
-    guide = inference_guide_text(has_code)
-    if not guide:
-        return text
-    marker = guide_marker()
-    if marker and marker in text:
-        return text
-    return f"{text} {guide}"
-
-
-def format_sft_user_content(instruction: str, code: str = "") -> str:
-    """Build user turn: instruction (+ lang suffix) → guide → optional code fence."""
-    text = instruction.strip()
-    if LANG_SUFFIX not in text:
-        text = f"{text} {LANG_SUFFIX}"
-    code = (code or "").strip()
-    text = append_inference_guide(text, has_code=bool(code))
-    if code:
-        text = f"{text}\n\n```\n{code}\n```"
+def strip_answer_cue(text: str) -> str:
+    stripped = text.lstrip()
+    if stripped.startswith(ANSWER_CUE):
+        return stripped[len(ANSWER_CUE) :].lstrip()
     return text
 
 
-def inject_book_quotes(user_content: str, quotes: list[str]) -> str:
-    if not quotes:
-        return user_content
-    from tutor.retrieve import format_quote_block
-
-    block = format_quote_block(quotes)
-    fence = "\n\n```\n"
-    if fence in user_content:
-        head, tail = user_content.split(fence, 1)
-        return f"{head}\n\n{block}{fence}{tail}"
-    return f"{user_content}\n\n{block}"
+def pick_programming_style() -> tuple[str, str]:
+    return secrets.choice(PROGRAMMING_STYLES)
 
 
-def build_user_content(question: str, code: str = "", quotes: list[str] | None = None) -> str:
-    text = format_sft_user_content(question, code)
-    if quotes:
-        text = inject_book_quotes(text, quotes)
-    return text
+def pick_miit_wording_style() -> tuple[str, str]:
+    return secrets.choice(MIIT_WORDING_STYLES)
 
 
-def build_messages(
-    question: str, code: str = "", quotes: list[str] | None = None
+def build_general_tutor_messages(
+    question: str,
+    code: str = "",
+    history: list[dict] | None = None,
+    delivery_style: tuple[str, str] | None = None,
 ) -> list[dict]:
-    return [{"role": "user", "content": build_user_content(question, code, quotes)}]
-
-
-def build_messages_from_row(row: dict) -> list[dict]:
-    return [
-        {
-            "role": "user",
-            "content": format_sft_user_content(
-                row["instruction"],
-                row.get("input", ""),
-            ),
-        }
+    """Spoken Burmese programming tutor prompt for Gemini."""
+    q = question.strip()
+    c = (code or "").strip()
+    recent = list(history or [])[-3:]
+    if delivery_style is not None:
+        _style_name, style_line = delivery_style
+    elif recent:
+        _style_name, style_line = CONTINUE_STYLE
+    else:
+        _style_name, style_line = pick_programming_style()
+    prompt_lines = [
+        "သင်သည် မြန်မာ ပရိုဂရမ်မင်း ဆရာ တစ်ဦး ဖြစ်ပါသည်။ စတင်လေ့လာသူကို မျက်နှာချင်းဆိုင် ရှင်းပြသလို ရေးပါ။",
+        "ဆက်စပ်နေသော မြန်မာဝါကျများဖြင့် ပြောပါ။ ဘာသာပြန်ထားသော အကြမ်းဖျင်းစာရင်းလို မရေးပါနှင့်။ နံပါတ်တပ် အင်္ဂလိပ်ခေါင်းစဉ် မသုံးပါနှင့်။ ဝါကျတိုင်းကို အစချင်းတူအောင် မဖွင့်ပါနှင့်။",
+        "…ခြင်း ဆိုသော စကားလုံးတန်းရှည်များကို ရှောင်ပါ။ programming စကားလုံးကို ပုံမှန် မြန်မာဝါကျထဲမှာ ထည့်ရေးပါ။",
+        "အရှည်သည် အလယ်အလတ် ဖြစ်ရမည်။ စာပိုဒ် နှစ်ခုမှ သုံးခုအထိ၊ တိုတိုရေးပါ။ ဘာလဲ၊ ဘာကြောင့် သုံးသလဲ ဆိုတာ ပါရမည်။ code ဥပမာက အထောက်အကူဖြစ်မှသာ တိုတိုတစ်ခု ထည့်ပါ။",
+        "စာပိုဒ်တိုင်းကို ပုဒ်မ (။) ဖြင့် အဆုံးသတ်ပါ။ စကားလုံး အလယ်မှာ မရပ်ပါနှင့်။",
+        "နေ့စဉ်သုံး မြန်မာစကားလုံးက အဓိပ္ပာယ် လွဲမည့် term ကို အင်္ဂလိပ်လိုပဲ ထားပါ။",
+        "library ကို စာကြည့်တိုက် လို့ မပြန်ပါနှင့်။ library လို့ရေးပြီး အသင့်သုံး code စုဖြစ်ကြောင်း ရှင်းပါ။",
+        "function, class, string, module, package, framework, hook, API တို့ကိုလည်း အင်္ဂလိပ်ဝေါဟာရအတိုင်း ထားပါ။",
+        ANTI_COPY_LINE,
+        PERSON_PRONOUN_LINE,
+        ENGLISH_NAMES_LINE,
+        style_line,
+        "",
     ]
+    if recent:
+        prompt_lines.insert(-1, FOLLOW_THREAD_LINE)
+        prompt_lines.append("အရင် စကားပြော:")
+        for turn in recent:
+            prompt_lines.append(f"ကျောင်းသား: {turn.get('question', '').strip()}")
+            prompt_lines.append(f"ဆရာ: {turn.get('answer', '').strip()}")
+            prompt_lines.append("")
+    prompt_lines.append(f"ကျောင်းသား မေးခွန်း: {q}")
+    if c:
+        prompt_lines.append(f"\nကျောင်းသား ထည့်သွင်းထားသော code:\n```\n{c}\n```")
+    prompt_lines.append(f"\n{ANSWER_CUE}")
+    return [{"role": "user", "content": "\n".join(prompt_lines)}]
+
+
+def build_miit_messages(
+    question: str,
+    passages: list,
+    code: str = "",
+    history: list[dict] | None = None,
+    delivery_style: tuple[str, str] | None = None,
+) -> list[dict]:
+    """Answer from MIIT notes only. List source URLs. Do not invent faculty facts."""
+    q = question.strip()
+    c = (code or "").strip()
+    recent = list(history or [])[-3:]
+    if delivery_style is not None:
+        _style_name, style_line = delivery_style
+    elif recent:
+        _style_name, style_line = CONTINUE_STYLE
+    else:
+        _style_name, style_line = pick_miit_wording_style()
+    prompt_lines = [
+        "သင်သည် မှတ်တမ်းကိုသာ အခြေခံသော ပညာရပ်ဆိုင်ရာ လက်ထောက် ဖြစ်ပါသည်။ ဤကျောင်းသား မေးခွန်းကို တိုက်ရိုက် ဖြေပါ။ ကြော်ငြာပုံ မရေးပါနှင့်။",
+        "ဆက်စပ်နေသော မြန်မာဝါကျများဖြင့် ပြောပါ။ အောက်ပါ မှတ်တမ်းထဲမှာ ပါသော အချက်ကိုသာ သုံးပါ။ မှတ်တမ်းမှာ မပါလျှင် မသိကြောင်း ပြောပါ။ ခန့်မှန်းမရေးပါနှင့်။",
+        "အဖြေအဆုံးတွင် သုံးခဲ့သော source URL များကို စာကြောင်းတစ်ကြောင်းစီ ရေးပါ။",
+        "စာပိုဒ်တိုင်းကို ပုဒ်မ (။) ဖြင့် အဆုံးသတ်ပါ။",
+        "အဖြေထဲမှာ ဆရာ့အဖြေ: လို့ မရေးပါနှင့်။",
+        ANTI_COPY_LINE,
+        PERSON_PRONOUN_LINE,
+        ENGLISH_NAMES_LINE,
+        MIIT_FOCUS_LINE,
+        MIIT_PAPERS_LINE,
+        MIIT_PROGRAM_LINE,
+        style_line,
+        "",
+        "မှတ်တမ်း:",
+    ]
+    for passage in passages:
+        prompt_lines.append(passage.text)
+        for url in passage.sources:
+            prompt_lines.append(f"source: {url}")
+        prompt_lines.append("")
+    if recent:
+        prompt_lines.insert(prompt_lines.index(""), FOLLOW_THREAD_LINE)
+        prompt_lines.append("အရင် စကားပြော:")
+        for turn in recent:
+            prompt_lines.append(f"ကျောင်းသား: {turn.get('question', '').strip()}")
+            prompt_lines.append(f"ဆရာ: {turn.get('answer', '').strip()}")
+            prompt_lines.append("")
+    prompt_lines.append(f"ကျောင်းသား မေးခွန်း: {q}")
+    if c:
+        prompt_lines.append(f"\nကျောင်းသား ထည့်သွင်းထားသော code:\n```\n{c}\n```")
+    prompt_lines.append(f"\n{ANSWER_CUE}")
+    return [{"role": "user", "content": "\n".join(prompt_lines)}]

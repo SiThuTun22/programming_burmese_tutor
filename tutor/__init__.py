@@ -1,1 +1,1 @@
-"""Myanmar programming tutor inference (CLI, Gradio, Litestar, eval)."""
+"""Myanmar programming tutor: Gemini chat for programming questions."""

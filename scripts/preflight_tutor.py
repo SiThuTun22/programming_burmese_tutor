@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check GPU, adapter, and env before starting the tutor app."""
+"""Check the Gemini or OpenRouter key before starting the tutor app."""
 
 from __future__ import annotations
 
@@ -13,47 +13,60 @@ from tutor.env_bootstrap import load_project_env
 
 load_project_env()
 
-import torch
+from tutor.config import (
+    GEMINI_API_KEY,
+    GEMINI_TTS_NAMES_API_KEY,
+    HYBRID_CHAT_PROVIDER,
+    MIIT_INDEX_PATH,
+    MIIT_RETRIEVAL,
+    OPENROUTER_API_KEY,
+    TTS_ENABLED,
+    TUTOR_BACKEND,
+)
 
-from tutor.config import ADAPTER_PATH, MIN_VRAM_GIB
 
-
-def _gib(bytes_count: int) -> float:
-    return bytes_count / (1024**3)
+def check_hybrid() -> list[str]:
+    errors: list[str] = []
+    if HYBRID_CHAT_PROVIDER == "gemini" and not GEMINI_API_KEY.strip():
+        errors.append(
+            "GEMINI_API_KEY is missing. Set it for HYBRID_CHAT_PROVIDER=gemini."
+        )
+    # GEMINI_API_KEY_FALLBACK is optional: chat-only if the primary key hits 429.
+    if HYBRID_CHAT_PROVIDER == "openrouter" and not OPENROUTER_API_KEY.strip():
+        errors.append(
+            "OPENROUTER_API_KEY is missing. Set it for HYBRID_CHAT_PROVIDER=openrouter."
+        )
+    return errors
 
 
 def main() -> int:
-    errors: list[str] = []
-
-    if not torch.cuda.is_available():
-        errors.append("CUDA is not available (need an NVIDIA GPU and CUDA PyTorch).")
-    else:
-        free, total = torch.cuda.mem_get_info(0)
-        free_gib = _gib(free)
-        total_gib = _gib(total)
+    if TUTOR_BACKEND != "hybrid":
         print(
-            f"preflight: VRAM free {free_gib:.1f} / {total_gib:.1f} GiB "
-            f"(need >= {MIN_VRAM_GIB:.1f} GiB)"
+            "preflight: only TUTOR_BACKEND=hybrid is supported.",
+            file=sys.stderr,
         )
-        if free_gib < MIN_VRAM_GIB:
-            errors.append(
-                f"Not enough free VRAM ({free_gib:.1f} GiB < {MIN_VRAM_GIB:.1f} GiB). "
-                "Stop other GPU jobs (make serve-api, chat, train). "
-                "Run `fuser -v /dev/nvidia0` and kill stale processes."
-            )
+        return 1
 
-    if not ADAPTER_PATH.exists():
-        errors.append(
-            f"LoRA adapter not found at {ADAPTER_PATH}. "
-            "Run make train or copy outputs/lora_adapter onto this machine."
-        )
-
+    errors = check_hybrid()
     if errors:
         for msg in errors:
             print(f"preflight: {msg}", file=sys.stderr)
         return 1
-
-    print(f"preflight: OK (cuda={torch.cuda.get_device_name(0)}, adapter={ADAPTER_PATH})")
+    if MIIT_RETRIEVAL == "embed" and not MIIT_INDEX_PATH.is_file():
+        print(
+            f"preflight: MIIT index missing at {MIIT_INDEX_PATH}. "
+            "Run make miit-index.",
+            file=sys.stderr,
+        )
+        return 1
+    if TTS_ENABLED and not GEMINI_TTS_NAMES_API_KEY.strip():
+        print(
+            "preflight: warning: GEMINI_TTS_NAMES_API_KEY is empty. "
+            "Q&A uses GEMINI_API_KEY only; unknown English names will not be "
+            "rewritten for speech.",
+            file=sys.stderr,
+        )
+    print(f"preflight: OK (backend=hybrid, chat={HYBRID_CHAT_PROVIDER})")
     return 0
 
 

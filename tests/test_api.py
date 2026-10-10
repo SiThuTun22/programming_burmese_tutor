@@ -22,15 +22,15 @@ async def _mock_lifespan(app: Litestar) -> AsyncIterator[None]:
     yield
 
 
-def test_health() -> None:
+def test_health(monkeypatch) -> None:
+    monkeypatch.setattr("tutor.api.TUTOR_BACKEND", "hybrid")
     app = create_app(lifespan_handlers=[_mock_lifespan])
     with TestClient(app=app) as client:
         resp = client.get("/health")
         assert resp.status_code == 200
         body = resp.json()
         assert body["status"] == "ok"
-        assert "cuda" in body
-        assert "adapter" in body
+        assert body["backend"] == "hybrid"
 
 
 def test_chat() -> None:

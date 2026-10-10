@@ -12,7 +12,6 @@ from tutor.env_bootstrap import load_project_env
 
 load_project_env()
 
-import torch
 from litestar import Litestar, Request, get, post
 from litestar.config.cors import CORSConfig
 from litestar.exceptions import HTTPException
@@ -23,8 +22,8 @@ from litestar.status_codes import (
 )
 
 from tutor import config
-from tutor.config import ADAPTER_PATH, CORS_ORIGINS
-from tutor.engine import TutorEngine
+from tutor.config import CORS_ORIGINS, TUTOR_BACKEND
+from tutor.hybrid import TutorLike, create_engine
 
 logger = logging.getLogger(__name__)
 
@@ -44,13 +43,12 @@ class ChatResponse:
 @dataclass
 class HealthResponse:
     status: str
-    cuda: bool
-    adapter: bool
+    backend: str
 
 
 @asynccontextmanager
 async def tutor_lifespan(app: Litestar) -> AsyncIterator[None]:
-    app.state.engine = TutorEngine(use_adapter=True)
+    app.state.engine = create_engine(use_adapter=True)
     try:
         yield
     finally:
@@ -58,7 +56,7 @@ async def tutor_lifespan(app: Litestar) -> AsyncIterator[None]:
         app.state.engine = None
 
 
-def _engine(request: Request) -> TutorEngine:
+def _engine(request: Request) -> TutorLike:
     engine = getattr(request.app.state, "engine", None)
     if engine is None:
         raise HTTPException(
@@ -84,11 +82,7 @@ def _verify_api_key(request: Request) -> None:
 
 @get("/health")
 async def health() -> HealthResponse:
-    return HealthResponse(
-        status="ok",
-        cuda=torch.cuda.is_available(),
-        adapter=ADAPTER_PATH.exists(),
-    )
+    return HealthResponse(status="ok", backend=TUTOR_BACKEND)
 
 
 @post("/v1/chat")
@@ -104,11 +98,6 @@ async def chat(data: ChatRequest, request: Request) -> ChatResponse:
         raise HTTPException(
             status_code=HTTP_400_BAD_REQUEST,
             detail=f"code exceeds maximum length ({config.MAX_CODE_CHARS} characters)",
-        )
-    if not data.use_adapter:
-        raise HTTPException(
-            status_code=HTTP_400_BAD_REQUEST,
-            detail="use_adapter=false is not supported on this server (would load a second model). Use CLI with --base instead.",
         )
     logger.info(
         "chat request question_len=%s code_len=%s",
