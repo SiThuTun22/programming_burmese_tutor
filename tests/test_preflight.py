@@ -45,11 +45,3 @@ def test_preflight_missing_index_fails(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(pf, "MIIT_RETRIEVAL", "embed")
     monkeypatch.setattr(pf, "MIIT_INDEX_PATH", tmp_path / "missing.json")
     assert pf.main() == 1
-
-
-def test_preflight_hybrid_missing_openrouter_key(monkeypatch) -> None:
-    pf = _load_preflight()
-    monkeypatch.setattr(pf, "TUTOR_BACKEND", "hybrid")
-    monkeypatch.setattr(pf, "HYBRID_CHAT_PROVIDER", "openrouter")
-    monkeypatch.setattr(pf, "OPENROUTER_API_KEY", "")
-    assert pf.main() == 1

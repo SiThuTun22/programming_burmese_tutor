@@ -196,6 +196,7 @@ def test_format_answer_metrics_burmese() -> None:
     from tutor.demo_log import format_answer_metrics
 
     line = format_answer_metrics("COBOL သည် လုပ်ငန်းသုံး ဘာသာစကား ဖြစ်သည်။")
+    assert "Language style (not accuracy)." in line
     assert "Myanmar-script ratio:" in line
     assert "English-mix penalty:" in line
     assert "Ends with ။: yes." in line
@@ -297,6 +298,29 @@ def test_classifier_other_skips_chat_generate() -> None:
         clear_route_cache()
 
 
+def test_ohms_law_hits_gemini_not_out_of_scope() -> None:
+    from tutor.router import OUT_OF_SCOPE_ANSWER, clear_route_cache, set_route_generate_fn
+
+    clear_route_cache()
+    set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
+    calls = {"n": 0}
+
+    def generate(messages: list[dict], **kwargs) -> str:
+        calls["n"] += 1
+        return "OHM"
+
+    try:
+        engine = _engine(generate)
+        answer = engine.answer("Ohm's law ဆိုတာ ဘာလဲ?", "")
+        assert answer == "OHM"
+        assert answer != OUT_OF_SCOPE_ANSWER
+        assert engine.last_route == "gemini"
+        assert calls["n"] == 1
+    finally:
+        set_route_generate_fn(None)
+        clear_route_cache()
+
+
 def test_classifier_binary_search_hits_chat_not_out_of_scope() -> None:
     from tutor.router import OUT_OF_SCOPE_ANSWER, clear_route_cache, set_route_generate_fn
 
@@ -346,7 +370,7 @@ def test_cse_followup_does_not_return_out_of_scope() -> None:
                 "answer": "Year I စသင်သည်။",
             }
         ]
-        answer = engine.answer("အဲဒါအပို ရှိသေးလဲ။", "", history)
+        answer = engine.answer("နောက်ထပ် ရှိသေးလား။", "", history)
         assert answer != OUT_OF_SCOPE_ANSWER
         assert answer == "MORE"
         assert engine.last_route == "miit"
@@ -371,7 +395,7 @@ def test_second_cse_followup_does_not_return_out_of_scope() -> None:
                 "answer": "အပို semester များ ရှိပါသည်။",
             },
         ]
-        answer = engine.answer("အဲဒါအပို ရှိသေးလဲ။", "", history)
+        answer = engine.answer("နောက်ထပ် ရှိသေးလား။", "", history)
         assert answer != OUT_OF_SCOPE_ANSWER
         assert answer == "REST"
         assert engine.last_route == "miit"

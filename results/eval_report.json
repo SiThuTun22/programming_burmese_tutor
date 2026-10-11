@@ -1,0 +1,780 @@
+{
+  "n_items": 58,
+  "citations": {
+    "route": {
+      "metric": "Accuracy and macro-F1",
+      "paper": "Sokolova & Lapalme (2009). A systematic analysis of performance measures for classification tasks. Information Processing & Management.",
+      "url": "https://doi.org/10.1016/j.ipm.2009.03.002"
+    },
+    "retrieval": {
+      "metric": "Recall@3 and MRR",
+      "paper": "Karpukhin et al. (2020). Dense Passage Retrieval for Open-Domain Question Answering. EMNLP.",
+      "url": "https://aclanthology.org/2020.emnlp-main.550/",
+      "ir_book": "https://nlp.stanford.edu/IR-book/"
+    },
+    "generation": {
+      "metric": "Exact Match and token F1 on gold fact spans",
+      "paper": "Lewis et al. (2020). Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks. NeurIPS.",
+      "url": "https://arxiv.org/abs/2005.11401"
+    }
+  },
+  "route": {
+    "n": 58,
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "labels": [
+      "miit",
+      "programming",
+      "other"
+    ],
+    "confusion": [
+      [
+        23,
+        0,
+        0
+      ],
+      [
+        0,
+        22,
+        0
+      ],
+      [
+        0,
+        0,
+        13
+      ]
+    ],
+    "rows": [
+      {
+        "id": "r-miit-1",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-2",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-3",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-4",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-5",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-6",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-7",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-8",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-9",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-10",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-11",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-12",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-13",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-14",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-15",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-16",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-miit-17",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-prog-1",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-2",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-3",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-4",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-5",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-6",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-7",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-8",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-9",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-10",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-11",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-12",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-13",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-14",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-15",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-16",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-prog-17",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-prog-18",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-prog-19",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-prog-20",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-21",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-prog-22",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-other-1",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-2",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-3",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-4",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-5",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-6",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-7",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-8",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-other-9",
+        "gold": "other",
+        "pred": "other"
+      },
+      {
+        "id": "r-fu-1",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-fu-2",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-fu-3",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-fu-4",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-fu-5",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-fu-6",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-fu-7",
+        "gold": "miit",
+        "pred": "miit"
+      },
+      {
+        "id": "r-fu-8",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-fu-9",
+        "gold": "programming",
+        "pred": "programming"
+      },
+      {
+        "id": "r-miit-18",
+        "gold": "miit",
+        "pred": "miit"
+      }
+    ]
+  },
+  "retrieval": {
+    "n": 23,
+    "k": 3,
+    "recall_at_3": 0.8696,
+    "mrr": 0.7754,
+    "rows": [
+      {
+        "id": "r-miit-1",
+        "gold_chunk_ids": [
+          "institute-overview"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-contact",
+          "admission-bachelor-subjects",
+          "admission-bachelor-exam"
+        ],
+        "recall_at_3": 0.0,
+        "mrr": 0.0
+      },
+      {
+        "id": "r-miit-2",
+        "gold_chunk_ids": [
+          "institute-governance"
+        ],
+        "ranked_ids": [
+          "institute-governance",
+          "admission-bachelor-contact",
+          "cynthia-role"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-3",
+        "gold_chunk_ids": [
+          "institute-campus"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-contact",
+          "institute-campus",
+          "institute-overview"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 0.5
+      },
+      {
+        "id": "r-miit-4",
+        "gold_chunk_ids": [
+          "institute-overview"
+        ],
+        "ranked_ids": [
+          "institute-overview",
+          "admission-bachelor-contact",
+          "institute-governance"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-5",
+        "gold_chunk_ids": [
+          "institute-governance"
+        ],
+        "ranked_ids": [
+          "institute-governance",
+          "admission-bachelor-contact",
+          "phyu-networks"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-6",
+        "gold_chunk_ids": [
+          "institute-programs"
+        ],
+        "ranked_ids": [
+          "institute-programs",
+          "admission-bachelor-contact",
+          "admission-bachelor-subjects"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-7",
+        "gold_chunk_ids": [
+          "cse-overview"
+        ],
+        "ranked_ids": [
+          "cse-overview",
+          "admission-bachelor-scope",
+          "institute-programs"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-8",
+        "gold_chunk_ids": [
+          "ece-overview"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-scope",
+          "ece-electives",
+          "ece-y5-s1"
+        ],
+        "recall_at_3": 0.0,
+        "mrr": 0.25
+      },
+      {
+        "id": "r-miit-9",
+        "gold_chunk_ids": [
+          "admission-bachelor-seats"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-seats",
+          "admission-bachelor-contact",
+          "admission-bachelor-process"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-10",
+        "gold_chunk_ids": [
+          "admission-bachelor-seats"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-seats",
+          "admission-bachelor-process",
+          "admission-bachelor-scope"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-11",
+        "gold_chunk_ids": [
+          "cynthia-role"
+        ],
+        "ranked_ids": [
+          "cynthia-email",
+          "cynthia-role",
+          "cynthia-research"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 0.5
+      },
+      {
+        "id": "r-miit-12",
+        "gold_chunk_ids": [
+          "cynthia-research"
+        ],
+        "ranked_ids": [
+          "cynthia-research",
+          "cynthia-email",
+          "cynthia-role"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-13",
+        "gold_chunk_ids": [
+          "kyawt-email"
+        ],
+        "ranked_ids": [
+          "kyawt-email",
+          "kyawt-role",
+          "kyawt-track-record"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-14",
+        "gold_chunk_ids": [
+          "phyu-role"
+        ],
+        "ranked_ids": [
+          "phyu-email",
+          "phyu-role",
+          "kyawt-email"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 0.5
+      },
+      {
+        "id": "r-miit-15",
+        "gold_chunk_ids": [
+          "aye-expertise"
+        ],
+        "ranked_ids": [
+          "aye-role",
+          "aye-email",
+          "aye-expertise"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 0.3333333333333333
+      },
+      {
+        "id": "r-miit-16",
+        "gold_chunk_ids": [
+          "tin-email"
+        ],
+        "ranked_ids": [
+          "tin-email",
+          "tin-role",
+          "aye-email"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-17",
+        "gold_chunk_ids": [
+          "zarchi-role"
+        ],
+        "ranked_ids": [
+          "zarchi-role",
+          "zarchi-expertise",
+          "cynthia-email"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-fu-1",
+        "gold_chunk_ids": [
+          "institute-overview"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-contact",
+          "admission-bachelor-subjects",
+          "admission-bachelor-exam"
+        ],
+        "recall_at_3": 0.0,
+        "mrr": 0.25
+      },
+      {
+        "id": "r-fu-2",
+        "gold_chunk_ids": [
+          "institute-campus"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-contact",
+          "institute-campus",
+          "institute-overview"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 0.5
+      },
+      {
+        "id": "r-fu-5",
+        "gold_chunk_ids": [
+          "cse-overview"
+        ],
+        "ranked_ids": [
+          "cse-overview",
+          "institute-programs",
+          "admission-bachelor-scope"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-fu-6",
+        "gold_chunk_ids": [
+          "cynthia-email"
+        ],
+        "ranked_ids": [
+          "cynthia-email",
+          "cynthia-role",
+          "cynthia-research"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-fu-7",
+        "gold_chunk_ids": [
+          "admission-bachelor-seats"
+        ],
+        "ranked_ids": [
+          "admission-bachelor-seats",
+          "admission-bachelor-contact",
+          "admission-bachelor-exam"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      },
+      {
+        "id": "r-miit-18",
+        "gold_chunk_ids": [
+          "ece-y2-s1"
+        ],
+        "ranked_ids": [
+          "ece-y2-s1",
+          "ece-y5-s2",
+          "ece-overview"
+        ],
+        "recall_at_3": 1.0,
+        "mrr": 1.0
+      }
+    ]
+  },
+  "generation": {
+    "n": 14,
+    "exact_match": 0.6429,
+    "token_f1": 0.0839,
+    "rows": [
+      {
+        "id": "r-miit-1",
+        "gold_spans": [
+          "Mandalay"
+        ],
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "MIIT သည် မြန်မာနိုင်ငံရှိ အင်စတီကျုတစ်ခု ဖြစ်သည်။ MIIT တွင် ဘွဲ့ကြိုသင်တန်းများ တက်ရောက်ရန်အတွက် တက္ကသိုလ်ဝင်တန်းတွင် သင်္ချာ၊ ရူပဗေဒ၊ ဓာတုဗေဒ နှင့် အင်္ဂလိပ်စာ ဘာသာရပ်များ ပါဝင်အောင်မြင်ထားရန် လိုအပ်သည်။ ဝင်ခွင့်ရွေးချယ်ရာတွင် တက္ကသိုလ်ဝင်"
+      },
+      {
+        "id": "r-miit-2",
+        "gold_spans": [
+          "Win Aye"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0678,
+        "answer_preview": "MIIT ၏ ပါမောက္ခချုပ်မှာ Dr. Win Aye ဖြစ်သည်။ သူသည် အစိုးရပိုင်ပုံစံဖြင့် လည်ပတ်နေသော MIIT ကို ဦးဆောင်လျက်ရှိသည်။  https://my.linkedin.com/edu/myanmar-institute-of-information-technology-%28miit%29-197015 https://www.miit.edu.mm/my/ https://"
+      },
+      {
+        "id": "r-miit-3",
+        "gold_spans": [
+          "Mandalay"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0333,
+        "answer_preview": "MIIT ကျောင်းဝင်းသည် မန္တလေးမြို့၊ ချမ်းမြသာစည်မြို့နယ်၊ ၇၃ လမ်း၊ ငုရွှေဝါလမ်းတွင် တည်ရှိပါသည်။ ဤကျောင်းဝင်းကို ခေတ်မီဗိသုကာလက်ရာများဖြင့် တည်ဆောက်ထားပြီး လက်တွေ့လုပ်ဆောင်ရသည့် ပရောဂျက်အခြေပြု အင်ဂျင်နီယာလုပ်ငန်းများအတွက် လိုအပ်သော ခေတ်မီနည်"
+      },
+      {
+        "id": "r-miit-4",
+        "gold_spans": [
+          "2015"
+        ],
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "MIIT ကို ၂၀၁၅ ခုနှစ်တွင် စတင်တည်ထောင်ခဲ့ပါသည်။  source: https://en.wikipedia.org/wiki/Myanmar_Institute_of_Information_Technology source: https://www.wikiwand.com/en/Myanmar_Institute_of_Information_Technology source: https://evendo.com/loc"
+      },
+      {
+        "id": "r-miit-5",
+        "gold_spans": [
+          "IIIT"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0247,
+        "answer_preview": "IIIT-B သည် MIIT ၏ mentor institution အဖြစ် ဆောင်ရွက်လျက်ရှိပြီး ပညာရေးဆိုင်ရာ အစီအစဉ်များ၊ ဆရာ၊ ဆရာမများ လေ့ကျင့်သင်ကြားရေးနှင့် လုပ်ငန်းလည်ပတ်မှုများကို ကြီးကြပ်ကူညီပေးပါသည်။ MIIT ကို IIIT-B ၏ ပုံစံအတိုင်း တည်ဆောက်ထားခြင်း ဖြစ်ပါသည်။  http"
+      },
+      {
+        "id": "r-miit-6",
+        "gold_spans": [
+          "CSE"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0345,
+        "answer_preview": "MIIT တွင် ကွန်ပျူတာသိပ္ပံနှင့် အင်ဂျင်နီယာပညာရပ် (CSE) ဘာသာရပ်ဖြင့် အင်ဂျင်နီယာဘွဲ့ (B.E. Hons)၊ အီလက်ထရောနစ်နှင့် ဆက်သွယ်ရေးအင်ဂျင်နီယာပညာရပ် (ECE) ဘာသာရပ်ဖြင့် အင်ဂျင်နီယာဘွဲ့ (B.E. Hons)၊ ကွန်ပျူတာသိပ္ပံဘာသာရပ်ဖြင့် အင်ဂျင်နီယာမဟာဘွဲ့ (M"
+      },
+      {
+        "id": "r-miit-8",
+        "gold_spans": [
+          "Electronics"
+        ],
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "ECE B.E. (Hons.) သည် MIIT တွင် ၅ နှစ်ကြာ သင်ကြားရပြီး စာသင်နှစ်ဝက် ၁၀ ခုဖြင့် ဖွဲ့စည်းထားသော အီလက်ထရောနစ်နှင့် ဆက်သွယ်ရေးအင်ဂျင်နီယာပညာရပ်ဆိုင်ရာ ဘွဲ့သင်တန်းတစ်ခု ဖြစ်ပါသည်။ သင်တန်းကာလအတွင်း ရူပဗေဒ၊ ဓာတုဗေဒနှင့် သင်္ချာဘာသာရပ်များအပြင် အီလက"
+      },
+      {
+        "id": "r-miit-9",
+        "gold_spans": [
+          "120"
+        ],
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "MIIT ၏ ဘွဲ့ကြိုဝင်ခွင့်အတွက် ရွေးချယ်မည့် စုစုပေါင်းဦးရေမှာ ၁၂၀ ဦး ဖြစ်ပါသည်။ ထိုဦးရေ ၁၂၀ ကို ဖြေဆိုသူများ၏ စုစုပေါင်းရမှတ်အလိုက် အများဆုံးမှ အနည်းဆုံးသို့ အစဉ်လိုက် ရွေးချယ်သတ်မှတ်ခြင်း ဖြစ်ပါသည်။ ရွေးချယ်ခံရသူများအနက် အမှတ်အများဆုံး ပထမ ၆"
+      },
+      {
+        "id": "r-miit-10",
+        "gold_spans": [
+          "60"
+        ],
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "MIIT ၏ ဘွဲ့ကြိုဝင်ခွင့်တွင် CSE အတွက် နေရာ ၆၀ ကို သတ်မှတ်ထားပါသည်။ MIIT တွင် စုစုပေါင်း ကျောင်းသား ၁၂၀ ဦးကို ရွေးချယ်ပြီး ၎င်းတို့အနက် အမှတ်အများဆုံးရရှိသူ ပထမ ၆၀ ဦးကို CSE ဘာသာရပ်အတွက် ခွဲဝေသတ်မှတ်ပေးခြင်း ဖြစ်ပါသည်။  https://www.miit.edu."
+      },
+      {
+        "id": "r-miit-11",
+        "gold_spans": [
+          "Cynthia"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0282,
+        "answer_preview": "ပါမောက္ခ Dr. Cynthia Myint သည် MIIT တွင် ပါမောက္ခအဖြစ် တာဝန်ထမ်းဆောင်နေသော ကွန်ပျူတာသိပ္ပံနှင့် သတင်းအချက်အလက်နည်းပညာဆိုင်ရာ သုတေသီတစ်ဦး ဖြစ်ပါသည်။ သူမကို Dr. Sin Thi Yar Myint ဟုလည်း ခေါ်ဆိုကြပြီး မြန်မာနိုင်ငံ၊ မန္တလေးမြို့တွင် အခြေစိုက်လ"
+      },
+      {
+        "id": "r-miit-12",
+        "gold_spans": [
+          "NLP"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0278,
+        "answer_preview": "ပါမောက္ခ Dr. Cynthia Myint သည် MIIT တွင် ပါမောက္ခအဖြစ် တာဝန်ထမ်းဆောင်နေသော သုတေသီတစ်ဦး ဖြစ်ပါသည်။ သူမ၏ သုတေသနစိတ်ဝင်စားမှုများသည် Natural Language Processing (NLP)၊ ကွန်ပျူတာသုံး ဘာသာဗေဒ (computational linguistics) နှင့် မြန်မာစာရေးသားပုံစန"
+      },
+      {
+        "id": "r-miit-13",
+        "gold_spans": [
+          "kyawt_kyawt_htay@miit.edu.mm"
+        ],
+        "em": 1.0,
+        "token_f1": 0.3871,
+        "answer_preview": "Dr. Kyawt Kyawt Htay ၏ တရားဝင် အီးမေးလ်မှာ kyawt_kyawt_htay@miit.edu.mm ဖြစ်ပါသည်။ သူမသည် MIIT တွင် Professor အဖြစ် တာဝန်ထမ်းဆောင်နေသူ ဖြစ်ပါသည်။  source: MIIT Faculty Directory"
+      },
+      {
+        "id": "r-miit-14",
+        "gold_spans": [
+          "Lecturer"
+        ],
+        "em": 1.0,
+        "token_f1": 0.0328,
+        "answer_preview": "Dr. Phyu Thwe သည် MIIT ၏ Faculty of Information Science / Computer Science Engineering တွင် Lecturer အဖြစ် တာဝန်ထမ်းဆောင်နေသူ ဖြစ်ပါသည်။ သူမသည် ၂၀၁၈ ခုနှစ် ဒီဇင်ဘာလမှစတင်၍ MIIT တွင် ပညာရပ်ဆိုင်ရာ ဝန်ဆောင်မှုများကို ပေးအပ်လျက်ရှိပါသည်။ ယခင်က"
+      },
+      {
+        "id": "r-miit-16",
+        "gold_spans": [
+          "tin_moh_moh_lwin@miit.edu.mm"
+        ],
+        "em": 1.0,
+        "token_f1": 0.5385,
+        "answer_preview": "Daw Tin Moh Moh Lwin ၏ တရားဝင် အီးမေးလ်မှာ tin_moh_moh_lwin@miit.edu.mm ဖြစ်ပါသည်။  MIIT Faculty Directory"
+      }
+    ]
+  }
+}

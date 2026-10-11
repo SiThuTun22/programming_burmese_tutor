@@ -1,4 +1,4 @@
-"""Session log, human scores, and answer language metrics for the demo."""
+"""Session log and answer language metrics for the demo."""
 
 from __future__ import annotations
 
@@ -14,7 +14,6 @@ ENGLISH_WORD_RE = re.compile(r"\b[A-Za-z]{4,}\b")
 CODE_BLOCK_RE = re.compile(r"```.*?```", re.DOTALL)
 
 SESSIONS_PATH = ROOT / "results" / "tutor_sessions.jsonl"
-SCORES_PATH = ROOT / "results" / "human_scores.jsonl"
 
 
 def strip_code_blocks(text: str) -> str:
@@ -54,6 +53,7 @@ def format_answer_metrics(text: str) -> str:
     metrics = answer_metrics(text)
     ended = "yes" if metrics["ends_with_period"] else "no"
     return (
+        f"Language style (not accuracy). "
         f"Myanmar-script ratio: {metrics['myanmar_script_ratio']:.3f}. "
         f"English-mix penalty: {metrics['mix_penalty']:.3f}. "
         f"Ends with ။: {ended}."
@@ -85,23 +85,4 @@ def log_session(
         "prior_turns": prior_turns,
     }
     append_jsonl(path or SESSIONS_PATH, row)
-    return row
-
-
-def log_human_score(
-    *,
-    turn_id: str,
-    fluency: int,
-    correctness: int,
-    beginner: int,
-    path: Path | None = None,
-) -> dict:
-    row = {
-        "time": datetime.now(timezone.utc).isoformat(),
-        "turn_id": turn_id,
-        "fluency": fluency,
-        "correctness": correctness,
-        "beginner": beginner,
-    }
-    append_jsonl(path or SCORES_PATH, row)
     return row

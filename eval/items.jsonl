@@ -1,0 +1,58 @@
+{"id": "r-miit-1", "question": "MIIT ဆိုတာ ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-overview"], "gold_spans": ["Mandalay"]}
+{"id": "r-miit-2", "question": "MIIT ပါမောက္ခချုပ် ဘယ်သူလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-governance"], "gold_spans": ["Win Aye"]}
+{"id": "r-miit-3", "question": "MIIT campus က ဘယ်မှာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-campus"], "gold_spans": ["Mandalay"]}
+{"id": "r-miit-4", "question": "MIIT ကို ဘယ်နှစ်မှာ တည်ထောင်ခဲ့လဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-overview"], "gold_spans": ["2015"]}
+{"id": "r-miit-5", "question": "IIIT-B က MIIT နဲ့ ဘယ်လို ဆက်စပ်လဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-governance"], "gold_spans": ["IIIT"]}
+{"id": "r-miit-6", "question": "MIIT မှာ ဘယ် programmes တွေ ရှိလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["institute-programs"], "gold_spans": ["CSE"]}
+{"id": "r-miit-7", "question": "CSE B.E. Hons သင်တန်းက ဘယ်လောက် ကြာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["cse-overview"], "gold_spans": []}
+{"id": "r-miit-8", "question": "ECE B.E. Hons ဆိုတာ ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["ece-overview"], "gold_spans": ["Electronics"]}
+{"id": "r-miit-9", "question": "MIIT ဘွဲ့ကြို ဝင်ခွင့် ဦးရေ ဘယ်လောက်လဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["admission-bachelor-seats"], "gold_spans": ["120"]}
+{"id": "r-miit-10", "question": "MIIT admission မှာ CSE နေရာ ဘယ်နှစ်နေရာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["admission-bachelor-seats"], "gold_spans": ["60"]}
+{"id": "r-miit-11", "question": "Dr. Cynthia Myint က ဘယ်သူလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["cynthia-role"], "gold_spans": ["Cynthia"]}
+{"id": "r-miit-12", "question": "Cynthia Myint သုတေသနက ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["cynthia-research"], "gold_spans": ["NLP"]}
+{"id": "r-miit-13", "question": "Dr. Kyawt Kyawt Htay email က ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["kyawt-email"], "gold_spans": ["kyawt_kyawt_htay@miit.edu.mm"]}
+{"id": "r-miit-14", "question": "Dr. Phyu Thwe က MIIT မှာ ဘာရာထူးလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["phyu-role"], "gold_spans": ["Lecturer"]}
+{"id": "r-miit-15", "question": "Dr. Aye Aye Thant သုတေသန နယ်ပယ်က ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["aye-expertise"], "gold_spans": []}
+{"id": "r-miit-16", "question": "Daw Tin Moh Moh Lwin email က ဘာလဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["tin-email"], "gold_spans": ["tin_moh_moh_lwin@miit.edu.mm"]}
+{"id": "r-miit-17", "question": "Dr. Zar Chi Su Su Hlaing က ဘယ် faculty လဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["zarchi-role"], "gold_spans": []}
+{"id": "r-prog-1", "question": "Python ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-2", "question": "list နဲ့ dict ဘာကွာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-3", "question": "Fragment ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-4", "question": "for loop နဲ့ while loop ဘာကွာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-5", "question": "SQL ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-6", "question": "useState hook ကို ဘယ်လို သုံးမလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-7", "question": "HTML နဲ့ CSS ကွာခြားချက် ရှင်းပြပါ", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-8", "question": "None ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-9", "question": "class နဲ့ instance ဘာကွာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-10", "question": "Compiler နဲ့ interpreter ဘာကွာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-11", "question": "Indentation က ဘာကြောင့် အရေးကြီးလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-12", "question": "ဒီ Python code က ဘာလုပ်သလဲ?", "code": "username = input(\"What is your name ? : \")\nprint(\"Your name is \", username)", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-13", "question": "Ohm's law ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-14", "question": "Kirchhoff's voltage law ရှင်းပြပါ", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-15", "question": "logic gate ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-16", "question": "Newton's second law ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-17", "question": "photosynthesis ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-18", "question": "derivative ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-19", "question": "Pythagorean theorem ရှင်းပြပါ", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-20", "question": "capacitor ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-21", "question": "V = IR ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-prog-22", "question": "binary numbers ဆိုတာ ဘာလဲ?", "code": "", "history": [], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-1", "question": "ဒီနေ့ မိုးရွာမလား။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-2", "question": "ဘောလုံးပွဲ ရလဒ် ပြောပါ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-3", "question": "ဟင်းချက်နည်း ပြောပါ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-4", "question": "ရွှေဈေး ဘယ်လောက်လဲ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-5", "question": "မင်္ဂလာပါ နေကောင်းလား။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-6", "question": "ရုပ်ရှင်အသစ် ဘာကြည့်ရမလဲ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-7", "question": "ယနေ့ သတင်းထူး ဘာရှိလဲ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-8", "question": "လမ်းပိတ်နေလား။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-other-9", "question": "လက်ထပ်ပွဲ ဘယ်နေ့လဲ။", "code": "", "history": [], "gold_route": "other", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-fu-1", "question": "အသေးစိတ် ပြောပါ။", "code": "", "history": [{"question": "MIIT ဆိုတာ ဘာလဲ။", "answer": "MIIT သည် မန္တလေးရှိ နည်းပညာတက္ကသိုလ် ဖြစ်သည်။"}], "gold_route": "miit", "gold_chunk_ids": ["institute-overview"], "gold_spans": []}
+{"id": "r-fu-2", "question": "နောက်ထပ် ရှိသေးလား။", "code": "", "history": [{"question": "MIIT campus က ဘယ်မှာလဲ။", "answer": "မန္တလေး၊ ချမ်းမြသာစည်မြို့နယ်။"}], "gold_route": "miit", "gold_chunk_ids": ["institute-campus"], "gold_spans": []}
+{"id": "r-fu-3", "question": "နောက်ထပ် ရှင်းပြပါ။", "code": "", "history": [{"question": "Python ဆိုတာ ဘာလဲ?", "answer": "Python သည် programming language ဖြစ်သည်။"}], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-fu-4", "question": "ဥပမာ ပေးပါ။", "code": "", "history": [{"question": "for loop နဲ့ while loop ဘာကွာလဲ?", "answer": "for က အကြိမ်ရေ သိရင် သုံးသည်။"}], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-fu-5", "question": "အသေးစိတ်", "code": "", "history": [{"question": "CSE B.E. Hons သင်တန်းက ဘယ်လောက် ကြာလဲ။", "answer": "၅ နှစ်၊ semester ၁၀ ခု။"}], "gold_route": "miit", "gold_chunk_ids": ["cse-overview"], "gold_spans": []}
+{"id": "r-fu-6", "question": "သူမ email လဲ ပြောပါ။", "code": "", "history": [{"question": "Dr. Cynthia Myint က ဘယ်သူလဲ။", "answer": "MIIT ပါမောက္ခ Dr. Cynthia Myint ဖြစ်သည်။"}], "gold_route": "miit", "gold_chunk_ids": ["cynthia-email"], "gold_spans": []}
+{"id": "r-fu-7", "question": "နောက်ထပ် ဘာရှိလဲ။", "code": "", "history": [{"question": "MIIT ဘွဲ့ကြို ဝင်ခွင့် ဦးရေ ဘယ်လောက်လဲ။", "answer": "စုစုပေါင်း ၁၂၀ ဦး။"}], "gold_route": "miit", "gold_chunk_ids": ["admission-bachelor-seats"], "gold_spans": []}
+{"id": "r-fu-8", "question": "ရော ဘယ်လို သုံးမလဲ။", "code": "", "history": [{"question": "useState hook ကို ဘယ်လို သုံးမလဲ?", "answer": "React မှာ state ထားရန် သုံးသည်။"}], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-fu-9", "question": "ဥပမာ ပေးပါ။", "code": "", "history": [{"question": "Ohm's law ဆိုတာ ဘာလဲ?", "answer": "V = IR ဖြစ်သည်။"}], "gold_route": "programming", "gold_chunk_ids": [], "gold_spans": []}
+{"id": "r-miit-18", "question": "MIIT မှာ ECE 2010 ဘာသင်လဲ။", "code": "", "history": [], "gold_route": "miit", "gold_chunk_ids": ["ece-y2-s1"], "gold_spans": []}

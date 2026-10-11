@@ -18,8 +18,9 @@ RouteGenerateFn = Callable[..., str]
 
 ROUTES = frozenset({"miit", "programming", "other"})
 OUT_OF_SCOPE_ANSWER = (
-    "ဒီမေးခွန်းက MIIT / တက္ကသိုလ်အချက်အလက် (သို့) ပရိုဂရမ်မင်း သင်ခန်းစာ "
-    "အပြင်ဘက် ဖြစ်ပါတယ်။ အဲဒီနှစ်ခုထဲက တစ်ခုကိုပဲ မေးပေးပါ။"
+    "ဒီမေးခွန်းက MIIT / တက္ကသိုလ်အချက်အလက်၊ "
+    "သို့မဟုတ် ကွန်ပျူတာအင်ဂျင်နီယာ (CSE/ECE) ဘာသာရပ် အပြင်ဘက် ဖြစ်ပါတယ်။ "
+    "အဲဒီအထဲက တစ်ခုကိုပဲ မေးပေးပါ။"
 )
 FOLLOW_HINTS = (
     "သူမ",
@@ -111,7 +112,27 @@ PROGRAMMING_HINTS = (
     "hook",
     "loop",
     "code",
-    "ရှင်းပြ",
+    "ohm",
+    "kirchhoff",
+    "voltage",
+    "current",
+    "resistor",
+    "capacitor",
+    "transistor",
+    "diode",
+    "circuit",
+    "fourier",
+    "laplace",
+    "boolean",
+    "logic gate",
+    "semiconductor",
+    "microprocessor",
+    "embedded",
+    "operating system",
+    "computer network",
+    "binary",
+    "v = ir",
+    "v=ir",
 )
 _FENCE_RE = re.compile(r"^```(?:json)?\s*|\s*```$", re.IGNORECASE)
 _ROUTER_PROMPT = (
@@ -119,9 +140,13 @@ _ROUTER_PROMPT = (
     '{"route":"miit"} or {"route":"programming"} or {"route":"other"}. '
     "miit = Myanmar Institute of Information Technology, faculty, campus, "
     "curriculum, university people or MIIT research. "
-    "programming = any coding, algorithms, data structures, Python, web, "
-    "HTML, CSS, JavaScript, React, PHP, SQL, or explaining pasted code. "
-    "other = weather, news, chit-chat, unrelated to MIIT or programming. "
+    "programming = computer-engineering / CSE / ECE subjects and coding: "
+    "algorithms, data structures, Python, web, HTML, CSS, JavaScript, React, "
+    "PHP, SQL, pasted code, circuits, Ohm's law, signals, digital electronics, "
+    "OS, networks, microprocessors, embedded systems. "
+    "other = weather, news, sports, cooking, greetings, chit-chat, biology, "
+    "general physics (e.g. Newton), high-school geometry, or other non-CE "
+    "topics; not MIIT and not computer engineering. "
     "If Prior question is set and this is a follow-up, keep that same route; "
     "do not use other.\n"
 )

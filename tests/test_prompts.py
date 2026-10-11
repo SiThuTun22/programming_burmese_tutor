@@ -42,6 +42,8 @@ def test_miit_prompt_anti_copy_without_programming_styles(monkeypatch) -> None:
     assert PERSON_PRONOUN_LINE in content
     assert ENGLISH_NAMES_LINE in content
     assert MIIT_FOCUS_LINE in content
+    assert "ပါမောက္ခ ကို ပထမဝါကျမှာ တစ်ကြိမ်သာ သုံးပါ" in MIIT_FOCUS_LINE
+    assert "Dr. Cynthia Myint နှင့် Dr. Sin Thi Yar Myint ကို တစ်ဝါကျတည်း မထပ်ရေးပါနှင့်" in MIIT_FOCUS_LINE
     assert MIIT_PAPERS_LINE in content
     assert MIIT_PROGRAM_LINE in content
     assert "နှစ်ကျော်မသွားပါနှင့်" in MIIT_PROGRAM_LINE

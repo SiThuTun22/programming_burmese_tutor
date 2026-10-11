@@ -32,8 +32,8 @@ def test_env_file_is_hybrid_chat() -> None:
     assert "GEMINI_TTS_NAMES_API_KEY" in text
     assert "Ask routing" in text or "routing" in text.lower()
     assert "GEMINI_EMBED_MODEL" in text
-    assert "OPENROUTER_API_KEY" in text
     assert "HYBRID_CHAT_PROVIDER=gemini" in text
+    assert "OPENROUTER_API_KEY" not in text
 
 
 def test_clamp_temperature() -> None:

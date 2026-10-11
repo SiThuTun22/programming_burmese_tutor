@@ -67,7 +67,7 @@ def main() -> None:
         print(generate_answer(engine, args.question, code))
         return
 
-    print("MIIT Programming Tutor (empty question to quit)")
+    print("Computer Engineering Tutor (empty question to quit)")
     while True:
         try:
             question = input("\nQuestion: ").strip()

@@ -1,6 +1,6 @@
 # Laptop setup (Mac M2, 8 GB)
 
-The MIIT programming tutor is Gemini chat. It does not load a local model. VPN is required for Gemini where Google APIs are blocked.
+The Computer Engineering Tutor is Gemini chat. It does not load a local model. VPN is required for Gemini where Google APIs are blocked.
 
 ## What GitHub includes
 
@@ -18,7 +18,7 @@ TUTOR_BACKEND=hybrid
 HYBRID_CHAT_PROVIDER=gemini
 GEMINI_API_KEY=your_key
 GEMINI_API_KEY_FALLBACK=your_second_key
-GEMINI_MODEL=gemini-2.0-flash
+GEMINI_MODEL=gemini-3.1-flash-lite
 TUTOR_CLOUD_MAX_TOKENS=3072
 ```
 
@@ -30,7 +30,3 @@ Programming questions use the tutor prompt. MIIT faculty notes use embedding ret
 Optional: `make smoke-hybrid` (15 prompts; calls the chat API).
 
 Free-tier rate limits apply.
-
-### Fallback: OpenRouter chat
-
-Set `HYBRID_CHAT_PROVIDER=openrouter`, `OPENROUTER_API_KEY`, and a `:free` `OPENROUTER_MODEL`. Free routes can be slow or rate-limited.

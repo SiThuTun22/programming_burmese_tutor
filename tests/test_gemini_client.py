@@ -116,7 +116,7 @@ def test_gemini_generate_honors_sampling_override(monkeypatch) -> None:
         models = DummyModels()
 
     monkeypatch.setattr("google.genai.Client", lambda **kw: DummyClient())
-    client = GeminiClient(api_key="test_key", fallback_api_key="", generate_model="gemini-2.0-flash")
+    client = GeminiClient(api_key="test_key", fallback_api_key="", generate_model="gemini-3.1-flash-lite")
     client.generate(
         [{"role": "user", "content": "hi"}],
         temperature=0.3,

@@ -1,6 +1,6 @@
-# MIIT Programming Tutor
+# Context-Aware Myanmar Language Tutor for Computer Engineering
 
-Burmese answers for programming questions and for MIIT faculty, campus, and curriculum from local notes. Programming goes straight to Gemini. MIIT-like questions retrieve `data/miit` with **gemini-embedding-001** after `make miit-index`.
+Burmese answers for **computer-engineering** (CSE/ECE) subject questions and coding via Gemini, plus programme notes (curriculum, admission, faculty, campus) via RAG. Institute facts retrieve `data/miit` with **gemini-embedding-001** after `make miit-index`. Biology, general physics, and other non-CE topics are refused.
 
 ## Quick start
 
@@ -49,3 +49,4 @@ Optional `TUTOR_API_KEY` for `POST /v1/chat`. `code` field max ~16k characters.
 | `make test` | Python tests |
 | `make miit-index` | Build `data/miit/index.json` from JSONL notes |
 | `make smoke-hybrid` | 15-prompt Gemini smoke |
+| `make eval` | Route Accuracy/F1, Recall@3/MRR, span EM (writes `results/eval_report.json`) |

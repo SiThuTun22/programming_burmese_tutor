@@ -86,7 +86,7 @@ TUTOR_BACKEND = env_str("TUTOR_BACKEND", "hybrid").strip().lower()
 GEMINI_API_KEY = env_str("GEMINI_API_KEY", "")
 GEMINI_API_KEY_FALLBACK = env_str("GEMINI_API_KEY_FALLBACK", "")
 GEMINI_TTS_NAMES_API_KEY = env_str("GEMINI_TTS_NAMES_API_KEY", "")
-GEMINI_MODEL = env_str("GEMINI_MODEL", "gemini-2.0-flash")
+GEMINI_MODEL = env_str("GEMINI_MODEL", "gemini-3.1-flash-lite")
 GEMINI_EMBED_MODEL = env_str("GEMINI_EMBED_MODEL", "gemini-embedding-001")
 MIIT_DIR = ROOT / "data" / "miit"
 MIIT_INDEX_PATH = env_path("MIIT_INDEX_PATH", MIIT_DIR / "index.json")
@@ -95,8 +95,3 @@ MIIT_MIN_SIMILARITY = env_float("MIIT_MIN_SIMILARITY", 0.55)
 MIIT_RETRIEVAL = env_str("MIIT_RETRIEVAL", "embed").strip().lower()
 HYBRID_DEBUG = env_bool("TUTOR_HYBRID_DEBUG", False)
 HYBRID_CHAT_PROVIDER = env_str("HYBRID_CHAT_PROVIDER", "gemini").strip().lower()
-OPENROUTER_API_KEY = env_str("OPENROUTER_API_KEY", "")
-OPENROUTER_MODEL = env_str(
-    "OPENROUTER_MODEL", "meta-llama/llama-3.2-3b-instruct:free"
-)
-OPENROUTER_BASE_URL = env_str("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")

@@ -46,6 +46,33 @@ def test_binary_search_is_programming_even_if_llm_says_other(tmp_path, monkeypat
         clear_route_cache()
 
 
+def test_non_ce_theory_is_other(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
+    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    clear_route_cache()
+    set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
+    try:
+        assert classify_route("Newton's second law ဆိုတာ ဘာလဲ?") == "other"
+        assert classify_route("photosynthesis ဆိုတာ ဘာလဲ?") == "other"
+        assert classify_route("Pythagorean theorem ရှင်းပြပါ") == "other"
+    finally:
+        set_route_generate_fn(None)
+        clear_route_cache()
+
+
+def test_ohms_law_is_programming_even_if_llm_says_other(tmp_path, monkeypatch) -> None:
+    monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
+    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    clear_route_cache()
+    set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
+    try:
+        assert classify_route("Ohm's law ဆိုတာ ဘာလဲ?") == "programming"
+        assert classify_route("Kirchhoff's voltage law ရှင်းပြပါ") == "programming"
+    finally:
+        set_route_generate_fn(None)
+        clear_route_cache()
+
+
 def test_weather_stays_other(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
     monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
@@ -86,7 +113,7 @@ def test_cse_more_followup_stays_miit_even_if_llm_says_other(
         }
     ]
     try:
-        assert classify_route("အဲဒါအပို ရှိသေးလဲ။", history=history) == "miit"
+        assert classify_route("နောက်ထပ် ရှိသေးလား။", history=history) == "miit"
         assert called["n"] == 0
     finally:
         set_route_generate_fn(None)
@@ -115,7 +142,7 @@ def test_second_followup_walks_back_to_cse_topic(tmp_path, monkeypatch) -> None:
         },
     ]
     try:
-        assert classify_route("အဲဒါအပို ရှိသေးလဲ။", history=history) == "miit"
+        assert classify_route("နောက်ထပ် ရှိသေးလား။", history=history) == "miit"
         assert called["n"] == 0
     finally:
         set_route_generate_fn(None)

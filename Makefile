@@ -1,4 +1,4 @@
-.PHONY: sync chat serve serve-api app preflight test smoke-hybrid miit-index
+.PHONY: sync chat serve serve-api app preflight test smoke-hybrid miit-index eval
 
 UV ?= uv
 PYTHON ?= $(UV) run python
@@ -25,6 +25,9 @@ test:
 
 smoke-hybrid:
 	$(PYTHON) scripts/smoke_hybrid.py
+
+eval:
+	$(PYTHON) scripts/eval_tutor.py
 
 miit-index:
 	$(PYTHON) scripts/build_miit_index.py

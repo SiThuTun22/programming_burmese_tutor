@@ -231,6 +231,7 @@ def test_institute_overview_loads_from_disk() -> None:
     assert "institute-overview" in ids
     assert "institute-governance" in ids
     assert "cynthia-role" in ids
+    assert "cynthia-email" in ids
     assert "cse-overview" in ids
     assert "cse-y1-s1" in ids
 

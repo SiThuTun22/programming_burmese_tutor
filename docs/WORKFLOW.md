@@ -2,9 +2,9 @@
 
 How this tutor answers a question, from setup through Gradio, routing, MIIT notes, Gemini, saved chats, and speech. Laptop install steps live in [LAPTOP_SETUP.md](LAPTOP_SETUP.md).
 
-The app is a **hybrid Burmese tutor**. Programming questions go to a cloud chat model. MIIT faculty, campus, and curriculum questions retrieve local notes, then the same model answers **only from those passages**. Anything else gets a fixed out-of-scope refusal.
+The app is a **hybrid Burmese tutor**. Computer-engineering (CSE/ECE) subject and coding questions go to a cloud chat model. MIIT faculty, campus, and curriculum questions retrieve local notes, then the same model answers **only from those passages**. Anything else gets a fixed out-of-scope refusal.
 
-There is no local fine-tuned model. Chat is Gemini (`gemini-2.0-flash` by default) or OpenRouter.
+There is no local fine-tuned model. Chat is Gemini (`gemini-3.1-flash-lite` by default).
 
 ## Surfaces
 
@@ -12,11 +12,11 @@ All three call `HybridEngine.answer()` in [`tutor/hybrid.py`](../tutor/hybrid.py
 
 | Surface | Command | History / chats | Extra |
 |---------|---------|-----------------|-------|
-| Gradio | `make app` | Yes. Sidebar + `results/chats.json` | TTS, scores, theme |
+| Gradio | `make app` | Yes. Sidebar + `results/chats.json` | TTS, theme |
 | HTTP API | `make serve-api` | No | `POST /v1/chat`, optional `TUTOR_API_KEY` |
 | CLI | `make chat` | No | Optional pasted code |
 
-Only Gradio keeps a thread. Follow-ups such as “အဲဒါအပို ရှိသေးလဲ။” stay on topic there; API and CLI treat every call as a new question.
+Only Gradio keeps a thread. Short follow-ups stay on topic there; API and CLI treat every call as a new question.
 
 ---
 
@@ -34,7 +34,6 @@ Optional keys in `.env`:
 | `GEMINI_API_KEY` | Chat answers and embeddings |
 | `GEMINI_API_KEY_FALLBACK` | Chat only, if the primary key hits 429 |
 | `GEMINI_TTS_NAMES_API_KEY` | Ask-time route classifier + TTS person-name JSON. Never used for the chat answer |
-| `HYBRID_CHAT_PROVIDER=openrouter` | Chat via OpenRouter instead of Gemini |
 
 After you edit any `data/miit/*.jsonl` file, run `make miit-index` again.
 
@@ -69,14 +68,14 @@ If the index file is missing at ask time, retrieval falls back to token overlap 
 [`scripts/preflight_tutor.py`](../scripts/preflight_tutor.py) fails unless:
 
 - `TUTOR_BACKEND=hybrid`
-- Chat key exists (`GEMINI_API_KEY` or `OPENROUTER_API_KEY`)
+- Chat key exists (`GEMINI_API_KEY`)
 - `data/miit/index.json` exists when `MIIT_RETRIEVAL=embed` (the default)
 
 It warns (does not fail) if `GEMINI_TTS_NAMES_API_KEY` is empty: answers still work; the LLM router and speech-name rewrite are skipped.
 
 Gradio then:
 
-1. `create_engine()` → `HybridEngine` with `GeminiClient.generate` or `OpenRouterClient.generate` from [`tutor/hybrid_providers.py`](../tutor/hybrid_providers.py).
+1. `create_engine()` → `HybridEngine` with `GeminiClient.generate` from [`tutor/hybrid_providers.py`](../tutor/hybrid_providers.py).
 2. `load_store()` from [`tutor/chats.py`](../tutor/chats.py) (`results/chats.json`). Missing or corrupt file → one empty “New chat”.
 3. Restore the active conversation’s turns into the chatbot.
 4. Browser JS restores Light/Dark from `localStorage.miitTheme` and relabels Gradio “Like” to “Listen”.
@@ -97,7 +96,7 @@ flowchart TD
   inherit -->|miit| retrieve
   inherit -->|programming| prog
   retrieve --> miitPrompt[MIIT prompt plus passages]
-  prog --> gemini[Gemini or OpenRouter generate]
+  prog --> gemini[Gemini generate]
   miitPrompt --> gemini
   gemini --> persist[Save chats.json and session log]
   persist --> ttsOptional[Optional edge-tts]
@@ -128,7 +127,7 @@ Order:
 
 1. **Rules** (`rule_route`):
    - MIIT if `looks_like_miit` on question or code (hints such as `miit`, `cse`, `ပါမောက္ခ`, `စင်သီယာ`, `win aye`, …).
-   - Programming if there is pasted code, or hints such as `python`, `loop`, `react`, `ရှင်းပြ`.
+   - Programming (CE subjects + code) if there is pasted code, or hints such as `python`, `loop`, `react`, `ohm`, `circuit`.
 2. **Inherit** (`inherit_thread_route`): if the new ask looks like a follow-up, walk **all** prior turns (question + answer) and reuse the last `miit` or `programming` topic. Follow-up = a hint (`သူမ`, `အဲဒါ`, `အပို`, `ရှိသေး`, `အသေးစိတ်`, `more`, …) **or** length ≤ 48 characters.
 3. **LLM router** (only if `GEMINI_TTS_NAMES_API_KEY` is set): JSON `{"route":"miit"|"programming"|"other"}`. Cached in memory and `.cache/router/`. Cache key is **this question + code only**, not history. Prior user question is included in the prompt so the model can keep the same route.
 4. **`"other"` remap**: if rules/LLM say `other` but inherit finds a thread topic, keep that topic. Hybrid retries inherit once more if `classify_route` still returned `other`.
@@ -179,11 +178,9 @@ The last **three** `{question, answer}` turns are appended. `FOLLOW_THREAD_LINE`
 2. Sampling: programming `TUTOR_TEMPERATURE=0.85` / `TUTOR_TOP_P=0.95`; MIIT `0.7` / `0.9`. Max tokens `TUTOR_CLOUD_MAX_TOKENS` (3072).
 3. Retry network, 5xx, and 429 (up to 12 attempts). Primary 429 with a fallback key → switch `GEMINI_API_KEY_FALLBACK` for **chat only** (not embed, not router). The Gradio status bar can show `using fallback api key for chatting`.
 
-[`tutor/openrouter_client.py`](../tutor/openrouter_client.py) if `HYBRID_CHAT_PROVIDER=openrouter`: OpenAI-style chat completions, same retry helper.
-
 ---
 
-## 9. Chats, theme, speech, scores
+## 9. Chats, theme, speech
 
 ### Sidebar ([`tutor/chats.py`](../tutor/chats.py))
 
@@ -207,16 +204,12 @@ Ear under a bot message (Gradio Like, relabelled Listen), or changing Male/Femal
 3. Cache key = prepared text + voice → `.cache/tts/<hash>.mp3`.
 4. `edge-tts` (`my-MM-NilarNeural` / `my-MM-ThihaNeural`). Needs outbound internet. If the primary voice fails, try the other.
 
-### Human scores
-
-**Save score** writes fluency / correctness / beginner (1–5) to `results/human_scores.jsonl`, keyed by the last `turn_id`. Requires a question first.
-
 ---
 
 ## 10. Not in this flow
 
 - No local weights, LoRA, or RAG beyond `data/miit`.
 - API and CLI do not persist chats or pass history, so they will not inherit a CSE/faculty thread.
-- Router disk cache ignores history; inherit/walk-back is what keeps “အဲဒါအပို ရှိသေးလဲ။” on MIIT in Gradio.
+- Router disk cache ignores history; inherit/walk-back is what keeps a short follow-up on MIIT in Gradio.
 - Editing JSONL without `make miit-index` leaves the old embeddings in `index.json`.
 - `make smoke-hybrid` is a 15-prompt live Gemini check, not part of a student ask.

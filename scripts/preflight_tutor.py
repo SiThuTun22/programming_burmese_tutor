@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the Gemini or OpenRouter key before starting the tutor app."""
+"""Check the Gemini key before starting the tutor app."""
 
 from __future__ import annotations
 
@@ -19,7 +19,6 @@ from tutor.config import (
     HYBRID_CHAT_PROVIDER,
     MIIT_INDEX_PATH,
     MIIT_RETRIEVAL,
-    OPENROUTER_API_KEY,
     TTS_ENABLED,
     TUTOR_BACKEND,
 )
@@ -27,15 +26,12 @@ from tutor.config import (
 
 def check_hybrid() -> list[str]:
     errors: list[str] = []
-    if HYBRID_CHAT_PROVIDER == "gemini" and not GEMINI_API_KEY.strip():
+    if HYBRID_CHAT_PROVIDER != "gemini":
         errors.append(
-            "GEMINI_API_KEY is missing. Set it for HYBRID_CHAT_PROVIDER=gemini."
+            f"HYBRID_CHAT_PROVIDER={HYBRID_CHAT_PROVIDER!r} is not supported. Use gemini."
         )
-    # GEMINI_API_KEY_FALLBACK is optional: chat-only if the primary key hits 429.
-    if HYBRID_CHAT_PROVIDER == "openrouter" and not OPENROUTER_API_KEY.strip():
-        errors.append(
-            "OPENROUTER_API_KEY is missing. Set it for HYBRID_CHAT_PROVIDER=openrouter."
-        )
+    if not GEMINI_API_KEY.strip():
+        errors.append("GEMINI_API_KEY is missing. Set it for hybrid chat.")
     return errors
 
 

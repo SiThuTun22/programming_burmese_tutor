@@ -30,17 +30,16 @@ from tutor.chats import (
     upsert_turns,
 )
 from tutor.config import GRADIO_HOST, GRADIO_PORT, TTS_CACHE_DIR, TTS_ENABLED
-from tutor.demo_log import format_answer_metrics, log_human_score, log_session
+from tutor.demo_log import format_answer_metrics, log_session
 from tutor.gemini_client import CHAT_FALLBACK_WARNING
 from tutor.hybrid import TutorLike, create_engine
 from tutor.tts import cached_audio_path, synthesize_sync
 
 ENGINE: TutorLike | None = None
 
-SCORE_CHOICES = ["1", "2", "3", "4", "5"]
 TTS_TICK_SECONDS = 0.35
 STATIC_DIR = ROOT / "static"
-APP_TITLE = "MIIT Programming Tutor"
+APP_TITLE = "Computer Engineering Tutor"
 LOGO_PATH = STATIC_DIR / "miit-logo.png"
 BUILDING_PATH = STATIC_DIR / "miit-building.jpg"
 LOGO_URL = "/gradio_api/file=" + str(LOGO_PATH.resolve())
@@ -923,18 +922,6 @@ def on_delete_chat(
     return _open_session(store)
 
 
-def save_score(turn_id: str, fluency: str, correctness: str, beginner: str) -> str:
-    if not (turn_id or "").strip():
-        return "Ask a question before saving a score."
-    log_human_score(
-        turn_id=turn_id.strip(),
-        fluency=int(fluency),
-        correctness=int(correctness),
-        beginner=int(beginner),
-    )
-    return "Score saved."
-
-
 def main() -> None:
     global ENGINE
     print("Loading tutor (hybrid)...", flush=True)
@@ -1054,20 +1041,6 @@ def main() -> None:
                     elem_classes=["miit-listen"],
                 )
                 metrics = gr.Markdown(elem_classes=["miit-note"])
-                gr.Markdown(
-                    "Score this answer (1–5) for the report.",
-                    elem_classes=["miit-note"],
-                )
-                with gr.Row():
-                    fluency = gr.Dropdown(SCORE_CHOICES, value="3", label="Fluency")
-                    correctness = gr.Dropdown(
-                        SCORE_CHOICES, value="3", label="Correctness"
-                    )
-                    beginner = gr.Dropdown(
-                        SCORE_CHOICES, value="3", label="Easy for a beginner"
-                    )
-                save_btn = gr.Button("Save score")
-                score_status = gr.Markdown(elem_classes=["miit-note"])
         session_outputs.extend(
             [
                 chatbot,
@@ -1111,11 +1084,6 @@ def main() -> None:
             inputs=[conversation_id, history],
             outputs=session_outputs,
             show_progress=False,
-        )
-        save_btn.click(
-            fn=save_score,
-            inputs=[turn_id, fluency, correctness, beginner],
-            outputs=[score_status],
         )
 
     demo.queue(default_concurrency_limit=1)
