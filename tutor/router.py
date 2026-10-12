@@ -1,4 +1,4 @@
-"""Ask-time route classifier (GEMINI_TTS_NAMES_API_KEY only)."""
+"""Ask-time route classifier (shared Gemini pool or optional TTS helper key)."""
 
 from __future__ import annotations
 
@@ -9,7 +9,8 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 
-from tutor.config import GEMINI_TTS_NAMES_API_KEY, ROOT
+from tutor.config import ROOT
+from tutor.gemini_pool import resolved_gemini_api_keys
 from tutor.knowledge import looks_like_miit
 
 logger = logging.getLogger(__name__)
@@ -213,11 +214,11 @@ def _call_router(prompt: str) -> str:
     messages = [{"role": "user", "content": prompt}]
     if _generate_fn is not None:
         return str(_generate_fn(messages, **kwargs) or "")
-    if not GEMINI_TTS_NAMES_API_KEY.strip():
+    if not resolved_gemini_api_keys():
         return ""
-    from tutor.gemini_client import GeminiClient
+    from tutor.gemini_client import get_tts_helper_gemini_client
 
-    return GeminiClient(api_key=GEMINI_TTS_NAMES_API_KEY).generate(messages, **kwargs)
+    return get_tts_helper_gemini_client().generate(messages, **kwargs)
 
 
 def classify_route(
@@ -236,7 +237,7 @@ def classify_route(
     inherited = inherit_thread_route(stripped, history)
     if inherited:
         return inherited
-    if _generate_fn is None and not GEMINI_TTS_NAMES_API_KEY.strip():
+    if _generate_fn is None and not resolved_gemini_api_keys():
         return None
     cache_payload = f"{stripped}\n\n{code_text}"
     cache_key = hashlib.sha256(cache_payload.encode("utf-8")).hexdigest()[:32]

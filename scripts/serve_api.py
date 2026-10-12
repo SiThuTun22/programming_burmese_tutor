@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run Litestar tutor API (POST /v1/chat, GET /health)."""
+"""Run AAA Litestar API (alias for serve_aaa_api)."""
 
 from __future__ import annotations
 
@@ -16,12 +16,17 @@ load_project_env()
 
 import uvicorn
 
-from tutor.api import app
 from tutor.config import API_HOST, API_PORT
 
 
 def main() -> None:
-    uvicorn.run(app, host=API_HOST, port=API_PORT, log_level="info")
+    uvicorn.run(
+        "app.main:create_app",
+        factory=True,
+        host=API_HOST,
+        port=API_PORT,
+        log_level="info",
+    )
 
 
 if __name__ == "__main__":

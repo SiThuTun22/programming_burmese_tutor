@@ -1,0 +1,4 @@
+[submodule "vendor/Agentic_Academic_Assistance"]
+	path = vendor/Agentic_Academic_Assistance
+	url = https://github.com/SiThuTun22/Agentic_Academic_Assistance.git
+	branch = dev

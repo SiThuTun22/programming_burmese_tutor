@@ -9,13 +9,25 @@ import re
 import threading
 from pathlib import Path
 
-from tutor.config import TTS_CACHE_DIR, TTS_ENABLED, TTS_VOICE
+from tutor.config import (
+    TTS_CACHE_DIR,
+    TTS_ENABLED,
+    TTS_ENGLISH_RATE,
+    TTS_SKIP_GEMINI_HELPERS,
+    TTS_VOICE,
+)
 from tutor.speech_names import apply_dynamic_person_names, map_outside_urls, strip_http_urls
+from tutor.tts_lexicon import apply_lexicon, load_lexicon, merge_lexicon
+from tutor.tts_phrases import PAUSE_SENTINEL, strip_markdown_for_speech
+from tutor.tts_pronounce import fetch_new_pronunciations
+from tutor.tts_segments import runs_are_english_only, split_script_runs
+from tutor.tts_spell import apply_tts_token_cache, resolve_spell_cache
 
 logger = logging.getLogger(__name__)
 
 VOICE_MALE = "my-MM-ThihaNeural"
 VOICE_FEMALE = "my-MM-NilarNeural"
+MAX_SPEECH_CHARS = 4000
 
 _locks: dict[str, threading.Lock] = {}
 _locks_guard = threading.Lock()
@@ -81,16 +93,26 @@ def _replace_speech_titles(segment: str) -> str:
     return re.sub(r"[ \t]{2,}", " ", segment)
 
 
-def prepare_for_speech(text: str) -> str:
+def prepare_for_speech(text: str, *, live_maps: bool = True) -> str:
     """Normalize answer text before synthesis."""
-    cleaned = text.strip()
-    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
-    cleaned = re.sub(r"[ \t]+", " ", cleaned)
-    cleaned = strip_http_urls(cleaned)
+    cleaned = strip_http_urls(text.strip())
     cleaned = map_outside_urls(cleaned, _strip_latin_parens)
     cleaned = map_outside_urls(cleaned, _replace_speech_names)
     cleaned = map_outside_urls(cleaned, _replace_speech_titles)
-    return apply_dynamic_person_names(cleaned.strip())
+    cleaned = apply_dynamic_person_names(cleaned.strip())
+    cleaned = strip_markdown_for_speech(cleaned)
+    lexicon = load_lexicon()
+    if live_maps and not TTS_SKIP_GEMINI_HELPERS:
+        new_entries = fetch_new_pronunciations(cleaned, list(lexicon))
+        if new_entries:
+            lexicon = merge_lexicon(new_entries)
+    cleaned = apply_lexicon(cleaned, lexicon)
+    if live_maps and not TTS_SKIP_GEMINI_HELPERS:
+        spell_cache = resolve_spell_cache(cleaned, list(lexicon))
+        cleaned = apply_tts_token_cache(cleaned, spell_cache)
+    if len(cleaned) > MAX_SPEECH_CHARS:
+        cleaned = cleaned[:MAX_SPEECH_CHARS]
+    return cleaned.strip()
 
 
 def _lock_for(key: str) -> threading.Lock:
@@ -99,7 +121,7 @@ def _lock_for(key: str) -> threading.Lock:
 
 
 def cache_key(text: str, gender: str | None = None) -> str:
-    prepared = prepare_for_speech(text)
+    prepared = prepare_for_speech(text, live_maps=False)
     voice = resolve_edge_voice(normalize_gender(gender))
     payload = f"{prepared}\n{voice}".encode("utf-8")
     return hashlib.sha256(payload).hexdigest()[:32]
@@ -111,7 +133,7 @@ def cache_path_for(text: str, gender: str | None = None) -> Path:
 
 
 def cached_audio_path(text: str, gender: str | None = None) -> str | None:
-    if not TTS_ENABLED or not prepare_for_speech(text):
+    if not TTS_ENABLED or not prepare_for_speech(text, live_maps=False):
         return None
     path = cache_path_for(text, gender)
     if path.is_file() and path.stat().st_size > 0:
@@ -119,14 +141,41 @@ def cached_audio_path(text: str, gender: str | None = None) -> str | None:
     return None
 
 
-async def synthesize_to_file(text: str, out_path: Path, voice: str) -> Path:
+async def _synthesize_one(text: str, voice: str, rate: str) -> bytes:
     import edge_tts
 
+    communicate = edge_tts.Communicate(text, voice, rate=rate)
+    chunks: list[bytes] = []
+    async for message in communicate.stream():
+        if message.get("type") != "audio":
+            continue
+        data = message.get("data")
+        if isinstance(data, bytes):
+            chunks.append(data)
+    audio = b"".join(chunks)
+    if not audio:
+        raise RuntimeError("edge-tts returned empty audio")
+    return audio
+
+
+async def synthesize_to_file(text: str, out_path: Path, voice: str) -> Path:
     prepared = prepare_for_speech(text)
     if not prepared:
         raise ValueError("empty text")
-    communicate = edge_tts.Communicate(prepared, voice=voice)
-    await communicate.save(str(out_path))
+    phrases = [part.strip() for part in prepared.split(PAUSE_SENTINEL) if part.strip()]
+    if not phrases:
+        raise ValueError("empty text")
+    clips: list[bytes] = []
+    default_rate = "+0%"
+    try:
+        for phrase in phrases:
+            rate = TTS_ENGLISH_RATE if runs_are_english_only(split_script_runs(phrase)) else default_rate
+            clips.append(await _synthesize_one(phrase, voice, rate))
+        audio = b"".join(clips)
+    except Exception:
+        audio = await _synthesize_one(" ".join(phrases), voice, default_rate)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_bytes(audio)
     return out_path
 
 

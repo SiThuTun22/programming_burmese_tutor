@@ -444,7 +444,7 @@ def chapter_2(doc: Document) -> None:
     add_section(doc, "2.7 Deployment")
     add_body(
         doc,
-        "The examiner runs make preflight && make app and opens http://localhost:7860. "
+        "The examiner runs make preflight, make api, make web, and opens http://localhost:5173. "
         "The page title is Computer Engineering Tutor. Students type in the composer, click "
         "Ask, optionally Listen, switch Light/Dark, or start a New chat. "
         "Chats persist in results/chats.json (local, gitignored). POST /v1/chat and the "

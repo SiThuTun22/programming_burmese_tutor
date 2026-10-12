@@ -6,6 +6,7 @@ from tutor.gemini_client import (
     _retry_delay_seconds,
     embedding_vectors_from_response,
     exception_retry_delay,
+    is_transient_network_error,
 )
 
 
@@ -44,6 +45,18 @@ def test_exception_retry_delay_connect_error() -> None:
     assert exception_retry_delay(httpx.ConnectError("reset"), 0) == 1.0
     assert exception_retry_delay(httpx.ConnectError("reset"), 3) == 8.0
     assert exception_retry_delay(httpx.ConnectError("reset"), 10) == 60.0
+
+
+def test_exception_retry_delay_connect_timeout() -> None:
+    err = httpx.ConnectTimeout("_ssl.c:993: The handshake operation timed out")
+    assert exception_retry_delay(err, 0) == 1.0
+    assert is_transient_network_error(err)
+
+
+def test_exception_retry_delay_ssl_handshake_message() -> None:
+    err = RuntimeError("_ssl.c:993: The handshake operation timed out")
+    assert is_transient_network_error(err)
+    assert exception_retry_delay(err, 1) == 2.0
 
 
 def test_exception_retry_delay_client_5xx() -> None:
@@ -127,12 +140,47 @@ def test_gemini_generate_honors_sampling_override(monkeypatch) -> None:
     assert config.get("top_p") == 0.5
 
 
-def test_generate_quota_switches_to_fallback_embed_stays_primary(monkeypatch, capsys) -> None:
-    from google.genai.errors import ClientError
-    from tutor.gemini_client import CHAT_FALLBACK_WARNING, GeminiClient
+def test_generate_overload_rotates_pool_key(monkeypatch) -> None:
+    from google.genai.errors import ServerError
+    from tutor.gemini_client import GeminiClient
 
     generate_keys: list[str] = []
-    embed_keys: list[str] = []
+
+    class DummyModels:
+        def __init__(self, api_key: str) -> None:
+            self.api_key = api_key
+
+        def generate_content(self, **kwargs):
+            del kwargs
+            generate_keys.append(self.api_key)
+            if self.api_key == "primary":
+                raise ServerError(
+                    503,
+                    {"error": {"status": "UNAVAILABLE", "message": "high demand"}},
+                    None,
+                )
+
+            class Resp:
+                text = "ok"
+
+            return Resp()
+
+    class DummyClient:
+        def __init__(self, api_key: str) -> None:
+            self.models = DummyModels(api_key)
+
+    monkeypatch.setattr("google.genai.Client", lambda **kw: DummyClient(kw["api_key"]))
+    client = GeminiClient(api_key="primary", fallback_api_key="secondary")
+    out = client.generate([{"role": "user", "content": "hi"}])
+    assert out == "ok"
+    assert generate_keys == ["primary", "secondary"]
+
+
+def test_generate_quota_rotates_pool_key(monkeypatch, capsys) -> None:
+    from google.genai.errors import ClientError
+    from tutor.gemini_client import GeminiClient
+
+    generate_keys: list[str] = []
 
     class DummyModels:
         def __init__(self, api_key: str) -> None:
@@ -145,19 +193,7 @@ def test_generate_quota_switches_to_fallback_embed_stays_primary(monkeypatch, ca
                 raise ClientError(429, {"error": {"status": "RESOURCE_EXHAUSTED"}}, None)
 
             class Resp:
-                text = "fallback-ok"
-
-            return Resp()
-
-        def embed_content(self, **kwargs):
-            del kwargs
-            embed_keys.append(self.api_key)
-
-            class Item:
-                values = [1.0]
-
-            class Resp:
-                embeddings = [Item()]
+                text = "ok"
 
             return Resp()
 
@@ -168,23 +204,16 @@ def test_generate_quota_switches_to_fallback_embed_stays_primary(monkeypatch, ca
     monkeypatch.setattr("google.genai.Client", lambda **kw: DummyClient(kw["api_key"]))
     client = GeminiClient(api_key="primary", fallback_api_key="secondary")
     out = client.generate([{"role": "user", "content": "hi"}])
-    assert out == "fallback-ok"
+    assert out == "ok"
     assert client.using_chat_fallback
     captured = capsys.readouterr()
-    assert CHAT_FALLBACK_WARNING in captured.out
+    assert "using fallback api key" not in captured.out
     assert generate_keys == ["primary", "secondary"]
-    assert client.embed(["x"]) == [[1.0]]
-    assert embed_keys == ["primary"]
-    assert client.generate([{"role": "user", "content": "again"}]) == "fallback-ok"
-    assert generate_keys == ["primary", "secondary", "secondary"]
 
 
-def test_generate_quota_without_fallback_retries(monkeypatch) -> None:
+def test_generate_quota_single_key_raises_when_exhausted(monkeypatch) -> None:
     from google.genai.errors import ClientError
     from tutor.gemini_client import GeminiClient
-
-    sleeps: list[float] = []
-    monkeypatch.setattr("tutor.gemini_client.time.sleep", sleeps.append)
 
     class DummyModels:
         def generate_content(self, **kwargs):
@@ -198,10 +227,8 @@ def test_generate_quota_without_fallback_retries(monkeypatch) -> None:
     client = GeminiClient(api_key="primary", fallback_api_key="")
     try:
         client.generate([{"role": "user", "content": "hi"}])
-    except ClientError as exc:
-        assert getattr(exc, "code", None) == 429
+    except RuntimeError as exc:
+        assert "rate-limited" in str(exc).lower()
     else:
-        raise AssertionError("expected 429 after retries")
-    assert sleeps
-    assert sleeps[0] == 50.0
+        raise AssertionError("expected all keys rate-limited")
 

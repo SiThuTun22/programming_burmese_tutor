@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import secrets
 
+from tutor.knowledge import looks_like_admission, looks_like_institute_overview, looks_like_papers
+
 ANSWER_CUE = "ဆရာ့အဖြေ:"
 ANTI_COPY_LINE = (
     "ကျောင်းသားက အရင်မေးခွန်းကို ပြန်မေးရင် စကားလုံးချင်းတူအောင် မကူးပါနှင့်။ "
@@ -41,11 +43,71 @@ MIIT_PROGRAM_LINE = (
     "ရေးပါ။ နှစ်ကျော်မသွားပါနှင့်။ ပြီးမှ electives နှင့် Capstone ကို ဆက်ပါ။ "
     "မှတ်တမ်းမှာ မပါသော ဘာသာရပ် သို့မဟုတ် elective ကုဒ်ကို မထွင်ပါနှင့်။"
 )
+MIIT_OVERVIEW_LINE = (
+    "တက္ကသိုလ် အကြောင်း မေးရင် ပထမဦးစွာ MIIT ဘာဆိုလဲ ဆိုတာ ဖြေပါ — "
+    "အင်္ဂလိပ်အမည် ပြည့်စုံ၊ မန္တလေးတည်ရှိမှု၊ တည်ထောင်သည့်နှစ်၊ ရည်ရွယ်ချက်/NCoE အခန်းကဏ္ဍ။ "
+    "ဘွဲ့ကြို ဝင်ခွင့်၊ စာမေးပွဲရမှတ်၊ ၆၀/၄၀ အလေးချိန်၊ ၁၂၀ ဦးရေကို ဤမေးခွန်းမှာ မဖွင့်ပါနှင့် "
+    "(ဝင်ခွင့်ကို သီးခြား မေးမှသာ ဖြေပါ)။"
+)
+MIIT_ADMISSION_LINE = (
+    "ဘွဲ့ကြို ဝင်ခွင့် မေးရင် မှတ်တမ်းထဲက စာမေးပွဲဘာသာရပ်၊ ရမှတ်အလေးချိန်၊ "
+    "ရွေးချယ်ဦးရေ၊ CSE/ECE ခွဲဝေမှုကို မှတ်တမ်းအတိုင်း ဖြေပါ။ မှတ်တမ်းမှာ မပါသော စည်းမျဉ်း မထွင်ပါနှင့်။"
+)
 FOLLOW_THREAD_LINE = (
     "ဤမေးခွန်းသည် အရင် စကားပြော၏ follow-up ဖြစ်သည်။ အခု မေးသည့် အချက်ကိုသာ ဖြေပါ။ "
     "အရင် စကားပြောကို သုံးပါ။ လူ သို့မဟုတ် ခေါင်းစဉ်ကို ပြန်မိတ်ဆက်ပြီး ကိုယ်ရေးအကျဉ်း သို့မဟုတ် URL များကို "
     "ထပ်မပေးပါနှင့်။ မေးမှသာ ထည့်ပါ။ သူမ / သူ / အဲဒါ ကို နောက်ဆုံး နာမည်မှ ယူပါ။"
 )
+TUTOR_SYSTEM_BASE = (
+    "Always reply in natural Myanmar, even if the student writes English or mixed language. "
+    "Always be polite and friendly. Never sound cold, harsh, or dismissive. "
+    "Do not translate computer science or programming vocabulary into Myanmar. "
+    "Leave terms such as function, component, Python, class, API, identifiers, and code in English (Latin script). "
+    "Surround those English terms with Myanmar explanation (for example: Python မှာ function က …). "
+    "Keep code blocks, file names, and quoted source text in English. "
+    "Do not invent Myanmar calques for those terms. "
+    "For computer-engineering topics only, you may include a short code example. "
+    "When you use a Markdown table, put each row on its own line, including the |---|---| separator. "
+    "Answer this student message only. Do not continue a previous faculty or campus topic unless they still ask about it. "
+    "Use retrieved MIIT knowledge only when it is relevant to this turn. "
+    "If retrieved knowledge is (none) or off-topic, ignore it. "
+    "Core facts (names, roles, dates, emails, course titles) must match retrieved knowledge exactly. "
+    "Do not add, drop, or improve those facts. "
+    "Do not paste retrieved chunks verbatim. Rephrase the explanation each time. "
+    "If a fact is not in retrieved knowledge, say you do not have it in the knowledge files. "
+    "Use only this turn's gendered first person and polite endings from the voice instructions. "
+    "Do not copy ကျွန်မ / ရှင် or ကျွန်တော် / ခင်ဗျာ from earlier tutor replies if they differ from this turn."
+)
+TUTOR_VOICE_FEMALE = (
+    "Speak as a gentle Burmese lady teacher. "
+    "Use first person ကျွန်မ. "
+    "End most sentences with ပါ or a plain ။. "
+    "Use ရှင် on at most one or two sentences per reply, usually the last line. "
+    "Do not put ရှင် on every sentence or every bullet. "
+    "Never start a reply with ရှင်, ဗျာ, or ခင်ဗျာ. "
+    "This turn you are female. Do not copy ကျွန်တော် or ခင်ဗျာ from earlier tutor lines. "
+    "Stay warm and calm. Do not use slang or a harsh voice."
+)
+TUTOR_VOICE_MALE = (
+    "Speak as a gentle Burmese gentleman teacher. "
+    "Use first person ကျွန်တော်. "
+    "End most sentences with ပါ or a plain ။. "
+    "Use ခင်ဗျာ on at most one or two sentences per reply, usually the last line. "
+    "Do not put ခင်ဗျာ or ဗျာ on every sentence or every bullet. "
+    "Never start a reply with ရှင်, ဗျာ, or ခင်ဗျာ. "
+    "This turn you are male. Do not copy ကျွန်မ or ရှင် from earlier tutor lines. "
+    "Stay warm and calm. Do not use slang or a harsh voice."
+)
+PROFILE_DELIVERY_STYLES: tuple[tuple[str, str], ...] = (
+    ("prose", "Delivery: short friendly prose covering the full professional profile."),
+    ("table", "Delivery: Markdown table for workplace, role, email, and research, then one short polite check-in."),
+    ("bullets", "Delivery: short bullets for the full profile, then one friendly question."),
+)
+GENERAL_DELIVERY_STYLES: tuple[tuple[str, str], ...] = (
+    ("short", "Delivery: answer this student question in short friendly Myanmar."),
+    ("checkin", "Delivery: a few short sentences on this topic only, then one polite check-in."),
+)
+
 CONTINUE_STYLE: tuple[str, str] = (
     "continue",
     "အရင်အဖြေကို ဆက်ပါ။ အသစ်စတင်သလို မရေးပါနှင့်။",
@@ -90,11 +152,19 @@ def pick_miit_wording_style() -> tuple[str, str]:
     return secrets.choice(MIIT_WORDING_STYLES)
 
 
+def voice_suffix(voice: str | None) -> str:
+    raw = str(voice or "female").strip().lower()
+    if raw in ("male", "thiha"):
+        return TUTOR_VOICE_MALE
+    return TUTOR_VOICE_FEMALE
+
+
 def build_general_tutor_messages(
     question: str,
     code: str = "",
     history: list[dict] | None = None,
     delivery_style: tuple[str, str] | None = None,
+    voice: str | None = None,
 ) -> list[dict]:
     """Spoken Burmese programming tutor prompt for Gemini."""
     q = question.strip()
@@ -108,6 +178,8 @@ def build_general_tutor_messages(
         _style_name, style_line = pick_programming_style()
     prompt_lines = [
         "သင်သည် MIIT ကျောင်းသားများအတွက် မြန်မာ ကွန်ပျူတာအင်ဂျင်နီယာ ဆရာ တစ်ဦး ဖြစ်ပါသည်။ ပရိုဂရမ်မင်းနှင့် CSE/ECE ဘာသာရပ် သင်ခန်းစာ (circuit, Ohm's law, digital electronics, OS, networks) ကို စတင်လေ့လာသူကို မျက်နှာချင်းဆိုင် ရှင်းပြသလို ရေးပါ။",
+        TUTOR_SYSTEM_BASE,
+        voice_suffix(voice),
         "ဆက်စပ်နေသော မြန်မာဝါကျများဖြင့် ပြောပါ။ ဘာသာပြန်ထားသော အကြမ်းဖျင်းစာရင်းလို မရေးပါနှင့်။ နံပါတ်တပ် အင်္ဂလိပ်ခေါင်းစဉ် မသုံးပါနှင့်။ ဝါကျတိုင်းကို အစချင်းတူအောင် မဖွင့်ပါနှင့်။",
         "…ခြင်း ဆိုသော စကားလုံးတန်းရှည်များကို ရှောင်ပါ။ programming နှင့် engineering စကားလုံးကို ပုံမှန် မြန်မာဝါကျထဲမှာ ထည့်ရေးပါ။",
         "အရှည်သည် အလယ်အလတ် ဖြစ်ရမည်။ စာပိုဒ် နှစ်ခုမှ သုံးခုအထိ၊ တိုတိုရေးပါ။ ဘာလဲ၊ ဘာကြောင့် သုံးသလဲ ဆိုတာ ပါရမည်။ code ဥပမာက အထောက်အကူဖြစ်မှသာ တိုတိုတစ်ခု ထည့်ပါ။ circuit သို့မဟုတ် ဖော်မြူလာ မေးရင် ဖော်မြူလာ သို့မဟုတ် ဂဏန်းဥပမာ သုံးပါ။",
@@ -141,6 +213,7 @@ def build_miit_messages(
     code: str = "",
     history: list[dict] | None = None,
     delivery_style: tuple[str, str] | None = None,
+    voice: str | None = None,
 ) -> list[dict]:
     """Answer from MIIT notes only. List source URLs. Do not invent faculty facts."""
     q = question.strip()
@@ -154,6 +227,8 @@ def build_miit_messages(
         _style_name, style_line = pick_miit_wording_style()
     prompt_lines = [
         "သင်သည် မှတ်တမ်းကိုသာ အခြေခံသော ပညာရပ်ဆိုင်ရာ လက်ထောက် ဖြစ်ပါသည်။ ဤကျောင်းသား မေးခွန်းကို တိုက်ရိုက် ဖြေပါ။ ကြော်ငြာပုံ မရေးပါနှင့်။",
+        TUTOR_SYSTEM_BASE,
+        voice_suffix(voice),
         "ဆက်စပ်နေသော မြန်မာဝါကျများဖြင့် ပြောပါ။ အောက်ပါ မှတ်တမ်းထဲမှာ ပါသော အချက်ကိုသာ သုံးပါ။ မှတ်တမ်းမှာ မပါလျှင် မသိကြောင်း ပြောပါ။ ခန့်မှန်းမရေးပါနှင့်။",
         "အဖြေအဆုံးတွင် သုံးခဲ့သော source URL များကို စာကြောင်းတစ်ကြောင်းစီ ရေးပါ။",
         "စာပိုဒ်တိုင်းကို ပုဒ်မ (။) ဖြင့် အဆုံးသတ်ပါ။",
@@ -162,12 +237,16 @@ def build_miit_messages(
         PERSON_PRONOUN_LINE,
         ENGLISH_NAMES_LINE,
         MIIT_FOCUS_LINE,
-        MIIT_PAPERS_LINE,
-        MIIT_PROGRAM_LINE,
-        style_line,
-        "",
-        "မှတ်တမ်း:",
     ]
+    if looks_like_institute_overview(q):
+        prompt_lines.append(MIIT_OVERVIEW_LINE)
+    elif looks_like_admission(q):
+        prompt_lines.append(MIIT_ADMISSION_LINE)
+    if looks_like_papers(q):
+        prompt_lines.append(MIIT_PAPERS_LINE)
+    if not looks_like_institute_overview(q):
+        prompt_lines.append(MIIT_PROGRAM_LINE)
+    prompt_lines.extend([style_line, "", "မှတ်တမ်း:"])
     for passage in passages:
         prompt_lines.append(passage.text)
         for url in passage.sources:

@@ -9,7 +9,7 @@ import re
 from collections.abc import Callable
 from pathlib import Path
 
-from tutor.config import GEMINI_TTS_NAMES_API_KEY, TTS_CACHE_DIR
+from tutor.config import TTS_CACHE_DIR
 
 logger = logging.getLogger(__name__)
 
@@ -181,11 +181,9 @@ def _call_name_model(prompt: str) -> str:
     messages = [{"role": "user", "content": prompt}]
     if _generate_fn is not None:
         return str(_generate_fn(messages, **kwargs) or "")
-    if not GEMINI_TTS_NAMES_API_KEY.strip():
-        return ""
-    from tutor.gemini_client import GeminiClient
+    from tutor.gemini_client import get_tts_helper_gemini_client
 
-    return GeminiClient(api_key=GEMINI_TTS_NAMES_API_KEY).generate(messages, **kwargs)
+    return get_tts_helper_gemini_client().generate(messages, **kwargs)
 
 
 def fetch_dynamic_replacements(text: str) -> list[tuple[str, str]]:

@@ -1,0 +1,20 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: programming-tutor-postgres
+    environment:
+      POSTGRES_USER: aaa
+      POSTGRES_PASSWORD: aaa
+      POSTGRES_DB: aaa
+    ports:
+      - "5435:5432"
+    volumes:
+      - tutor_aaa_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aaa -d aaa"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  tutor_aaa_pgdata:

@@ -22,6 +22,7 @@ def test_preflight_hybrid_missing_gemini_key(monkeypatch) -> None:
     monkeypatch.setattr(pf, "TUTOR_BACKEND", "hybrid")
     monkeypatch.setattr(pf, "HYBRID_CHAT_PROVIDER", "gemini")
     monkeypatch.setattr(pf, "GEMINI_API_KEY", "")
+    monkeypatch.setattr(pf, "GEMINI_API_KEYS", [])
     assert pf.main() == 1
 
 
@@ -34,6 +35,48 @@ def test_preflight_hybrid_ok_gemini(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(pf, "GEMINI_API_KEY", "test-key")
     monkeypatch.setattr(pf, "MIIT_RETRIEVAL", "embed")
     monkeypatch.setattr(pf, "MIIT_INDEX_PATH", index)
+    monkeypatch.setattr(pf, "GEMINI_PREFLIGHT_PROBE", False)
+    assert pf.main() == 0
+
+
+def test_preflight_probe_network_failure(monkeypatch, tmp_path) -> None:
+    import httpx
+
+    pf = _load_preflight()
+    index = tmp_path / "index.json"
+    index.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(pf, "TUTOR_BACKEND", "hybrid")
+    monkeypatch.setattr(pf, "HYBRID_CHAT_PROVIDER", "gemini")
+    monkeypatch.setattr(pf, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(pf, "MIIT_INDEX_PATH", index)
+    monkeypatch.setattr(pf, "GEMINI_PREFLIGHT_PROBE", True)
+
+    def _fail() -> None:
+        raise httpx.ConnectTimeout("handshake timed out")
+
+    monkeypatch.setattr(pf, "probe_gemini_connectivity", _fail)
+    assert pf.main() == 1
+
+
+def test_preflight_probe_success(monkeypatch, tmp_path) -> None:
+    pf = _load_preflight()
+    index = tmp_path / "index.json"
+    index.write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(pf, "TUTOR_BACKEND", "hybrid")
+    monkeypatch.setattr(pf, "HYBRID_CHAT_PROVIDER", "gemini")
+    monkeypatch.setattr(pf, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(pf, "MIIT_INDEX_PATH", index)
+    monkeypatch.setattr(pf, "GEMINI_PREFLIGHT_PROBE", True)
+    monkeypatch.setattr(pf, "probe_gemini_connectivity", lambda: None)
+    assert pf.main() == 0
+
+
+def test_preflight_aaa_ok(monkeypatch) -> None:
+    pf = _load_preflight()
+    monkeypatch.setattr(pf, "TUTOR_BACKEND", "aaa")
+    monkeypatch.setattr(pf, "HYBRID_CHAT_PROVIDER", "gemini")
+    monkeypatch.setattr(pf, "GEMINI_API_KEY", "test-key")
+    monkeypatch.setattr(pf, "GEMINI_PREFLIGHT_PROBE", False)
     assert pf.main() == 0
 
 

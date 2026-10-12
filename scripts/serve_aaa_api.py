@@ -1,0 +1,33 @@
+#!/usr/bin/env python3
+"""Run AAA Litestar API (auth, chat sessions, messages, speech)."""
+
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from tutor.env_bootstrap import load_project_env
+
+load_project_env()
+
+import uvicorn
+
+from tutor.config import API_HOST, API_PORT
+
+
+def main() -> None:
+    uvicorn.run(
+        "app.main:create_app",
+        factory=True,
+        host=API_HOST,
+        port=API_PORT,
+        log_level="info",
+    )
+
+
+if __name__ == "__main__":
+    main()

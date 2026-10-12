@@ -10,20 +10,22 @@ The Computer Engineering Tutor is Gemini chat. It does not load a local model. V
 ## Mac demo
 
 1. Get a free key at [Google AI Studio](https://aistudio.google.com/).
-2. `uv sync --extra app`
-3. `cp .env.example .env` and set:
+2. `make sync` (installs Gradio + AAA stack: LangGraph, pgvector, async Postgres driver)
+3. `cp .env.example .env` and set at least `GEMINI_API_KEYS` (comma-separated). Example:
 
 ```
-TUTOR_BACKEND=hybrid
-HYBRID_CHAT_PROVIDER=gemini
-GEMINI_API_KEY=your_key
-GEMINI_API_KEY_FALLBACK=your_second_key
+TUTOR_BACKEND=aaa
+DATABASE_URL=postgresql+asyncpg://aaa:aaa@localhost:5435/aaa
+GEMINI_API_KEYS=your_key,your_second_key
 GEMINI_MODEL=gemini-3.1-flash-lite
-TUTOR_CLOUD_MAX_TOKENS=3072
+GEMINI_EMBEDDING_MODEL=gemini-embedding-001
+RAG_TOP_K=5
 ```
 
-4. `make miit-index` (embeds `data/miit/*.jsonl`; needs the same API key)
-5. `make preflight && make app` → **http://localhost:7860**
+4. **AAA (default):** `make db-up` then `make db-migrate && make db-ingest` (Docker; first run only). **Hybrid:** set `TUTOR_BACKEND=hybrid` and `make miit-index`.
+5. `make preflight`, then in two terminals: `make api` (port **8001**) and `make web` → **http://localhost:5173**
+
+`make preflight` runs a short Gemini connectivity probe (disable with `GEMINI_PREFLIGHT_PROBE=false`). If you see SSL/connect timeout, turn on VPN first, then retry. Keys should come from Google AI Studio (`AIza…` in `GEMINI_API_KEYS`).
 
 Programming questions use the tutor prompt. MIIT faculty notes use embedding retrieval when similarity is high enough.
 

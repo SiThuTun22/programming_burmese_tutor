@@ -100,6 +100,43 @@ PROGRAM_QUERY_HINTS = (
 )
 PAPER_TOP_K = 5
 CURRICULUM_TOP_K = 12
+OVERVIEW_TOP_K = 4
+INTENT_OVERVIEW = "overview"
+INTENT_ADMISSION = "admission"
+ADMISSION_HINTS = (
+    "admission",
+    "entrance",
+    "ဝင်ခွင့်",
+    "ဝင်ခွင့်စာမေးပွဲ",
+    "တက္ကသိုလ်ဝင်တန်း",
+    "entrance exam",
+    "quota",
+    "seat",
+    "ဦးရေ",
+    "ရွေးချယ်",
+    "စာမေးပွဲရမှတ်",
+    "ရမှတ်",
+    "ဘွဲ့ကြို ဝင်",
+    "ဘွဲ့ကြိုဝင်",
+)
+OVERVIEW_HINTS = (
+    "ဘာလဲ",
+    "ဆိုတာ",
+    "what is",
+    "what's",
+    "whats ",
+    "tell me about",
+    "introduce",
+    "အကြောင်း",
+    "definition",
+    "meaning of",
+)
+FACULTY_WHO_HINTS = (
+    "who is",
+    "who are",
+    "ဘယ်သူ",
+    "ဘယ်လို အမည်",
+)
 STOPWORDS = {
     "the",
     "and",
@@ -219,6 +256,62 @@ def looks_like_curriculum(question: str) -> bool:
     return False
 
 
+def looks_like_admission(question: str) -> bool:
+    lowered = question.lower()
+    return any(hint in lowered for hint in ADMISSION_HINTS)
+
+
+def looks_like_institute_overview(question: str) -> bool:
+    if looks_like_admission(question):
+        return False
+    if looks_like_curriculum(question) or looks_like_papers(question):
+        return False
+    lowered = question.lower()
+    if any(hint in lowered for hint in FACULTY_WHO_HINTS):
+        return False
+    if "miit" not in lowered and "myanmar institute of information technology" not in lowered:
+        return False
+    if any(hint in lowered for hint in OVERVIEW_HINTS):
+        return True
+    stripped = question.strip()
+    return len(stripped) <= 48
+
+
+def miit_retrieval_intent(question: str) -> str | None:
+    if looks_like_admission(question):
+        return INTENT_ADMISSION
+    if looks_like_institute_overview(question):
+        return INTENT_OVERVIEW
+    return None
+
+
+def _indexed_pool_for_intent(
+    chunks: tuple[IndexedChunk, ...],
+    intent: str | None,
+) -> tuple[IndexedChunk, ...]:
+    if intent == INTENT_OVERVIEW:
+        pool = tuple(chunk for chunk in chunks if chunk.id.startswith("institute-"))
+        return pool if pool else chunks
+    if intent == INTENT_ADMISSION:
+        pool = tuple(chunk for chunk in chunks if chunk.id.startswith("admission-"))
+        return pool if pool else chunks
+    return chunks
+
+
+def _token_pool_for_intent(
+    chunks: list[KnowledgeChunk] | tuple[KnowledgeChunk, ...],
+    intent: str | None,
+) -> list[KnowledgeChunk]:
+    rows = list(chunks)
+    if intent == INTENT_OVERVIEW:
+        filtered = [chunk for chunk in rows if chunk.id.startswith("institute-")]
+        return filtered if filtered else rows
+    if intent == INTENT_ADMISSION:
+        filtered = [chunk for chunk in rows if chunk.id.startswith("admission-")]
+        return filtered if filtered else rows
+    return rows
+
+
 def retrieve_query(question: str, history: list[dict] | None = None) -> str:
     parts: list[str] = []
     for turn in list(history or [])[-2:]:
@@ -232,6 +325,8 @@ def retrieve_query(question: str, history: list[dict] | None = None) -> str:
 
 
 def effective_miit_limit(question: str, limit: int = MIIT_TOP_K) -> int:
+    if looks_like_institute_overview(question):
+        return max(limit, OVERVIEW_TOP_K)
     if looks_like_curriculum(question):
         return max(limit, CURRICULUM_TOP_K)
     if looks_like_papers(question):
@@ -249,9 +344,9 @@ def _is_embed_quota_error(exc: BaseException) -> bool:
 
 @lru_cache(maxsize=64)
 def _cached_query_embedding(question: str) -> tuple[float, ...]:
-    from tutor.gemini_client import GeminiClient
+    from tutor.gemini_client import get_shared_gemini_client
 
-    vectors = GeminiClient().embed([question])
+    vectors = get_shared_gemini_client().embed([question])
     if not vectors:
         return ()
     return tuple(float(v) for v in vectors[0])
@@ -377,11 +472,13 @@ def retrieve_miit_token(
     chunks: list[KnowledgeChunk] | tuple[KnowledgeChunk, ...] | None = None,
     limit: int = MIIT_TOP_K,
     min_score: float = TOKEN_MIN_SCORE,
+    intent: str | None = None,
 ) -> RetrieveResult:
     query_tokens = tokenize(question)
     if not query_tokens:
         return RetrieveResult(chunks=[], best_score=None)
-    pool = chunks if chunks is not None else miit_chunks()
+    raw_pool = chunks if chunks is not None else miit_chunks()
+    pool = _token_pool_for_intent(raw_pool, intent)
     scored: list[tuple[float, KnowledgeChunk]] = []
     for chunk in pool:
         overlap = len(query_tokens & chunk.tokens)
@@ -431,7 +528,12 @@ def retrieve_miit_embed(
             "miit: index missing; falling back to token overlap. Run: make miit-index",
             file=sys.stderr,
         )
-        return retrieve_miit_token(query, limit=effective_miit_limit(query, limit))
+        intent = miit_retrieval_intent(query)
+        return retrieve_miit_token(
+            query,
+            limit=effective_miit_limit(query, limit),
+            intent=intent,
+        )
 
     stripped = query.strip()
     try:
@@ -443,16 +545,39 @@ def retrieve_miit_embed(
     except Exception as exc:
         if _is_embed_quota_error(exc):
             print("miit: embed quota hit; falling back to token overlap", file=sys.stderr)
-            return retrieve_miit_token(query, limit=effective_miit_limit(query, limit))
+            intent = miit_retrieval_intent(query)
+            return retrieve_miit_token(
+                query,
+                limit=effective_miit_limit(query, limit),
+                intent=intent,
+            )
+        from tutor.gemini_client import network_error_in_chain
+
+        if network_error_in_chain(exc):
+            print(
+                "miit: embed network error; falling back to token overlap",
+                file=sys.stderr,
+            )
+            intent = miit_retrieval_intent(query)
+            return retrieve_miit_token(
+                query,
+                limit=effective_miit_limit(query, limit),
+                intent=intent,
+            )
         raise
 
     if not vectors:
         return RetrieveResult(chunks=[], best_score=None)
+    intent = miit_retrieval_intent(query)
+    pool = _indexed_pool_for_intent(loaded.chunks, intent)
+    rank_min = min_similarity
+    if intent == INTENT_OVERVIEW:
+        rank_min = min(min_similarity, 0.35)
     return rank_by_embeddings(
         vectors[0],
-        loaded.chunks,
+        pool,
         limit=effective_miit_limit(query, limit),
-        min_similarity=min_similarity,
+        min_similarity=rank_min,
     )
 
 
@@ -467,8 +592,13 @@ def retrieve_miit(
     query = retrieve_query(question, history)
     if not looks_like_miit(query):
         return RetrieveResult(chunks=[], best_score=None)
+    intent = miit_retrieval_intent(query)
     if MIIT_RETRIEVAL == "token":
-        return retrieve_miit_token(query, limit=effective_miit_limit(query, limit))
+        return retrieve_miit_token(
+            query,
+            limit=effective_miit_limit(query, limit),
+            intent=intent,
+        )
     return retrieve_miit_embed(
         question,
         history=history,

@@ -14,10 +14,17 @@ outputs/
 
 # MIIT embedding index (run make miit-index)
 data/miit/index.json
+data/tts-audio/
+data/tts_lexicon.json
+data/tts_spell.json
 
 # Demo transcripts and saved chats (local only)
 results/*.jsonl
 results/chats.json
+
+# React frontend
+web/node_modules/
+web/dist/
 
 # OS
 .DS_Store

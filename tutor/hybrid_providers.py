@@ -14,6 +14,6 @@ def resolve_generate_fn() -> GenerateFn:
         raise ValueError(
             f"Unknown HYBRID_CHAT_PROVIDER={HYBRID_CHAT_PROVIDER!r} (use gemini)"
         )
-    from tutor.gemini_client import GeminiClient
+    from tutor.gemini_client import get_shared_gemini_client
 
-    return GeminiClient().generate
+    return get_shared_gemini_client().generate

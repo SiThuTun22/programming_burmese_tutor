@@ -7,11 +7,14 @@ from tutor.prompts import (
     ENGLISH_NAMES_LINE,
     FOLLOW_THREAD_LINE,
     MIIT_FOCUS_LINE,
+    MIIT_OVERVIEW_LINE,
     MIIT_PAPERS_LINE,
     MIIT_PROGRAM_LINE,
     MIIT_WORDING_STYLES,
     PERSON_PRONOUN_LINE,
     PROGRAMMING_STYLES,
+    TUTOR_VOICE_FEMALE,
+    TUTOR_VOICE_MALE,
     build_general_tutor_messages,
     build_miit_messages,
 )
@@ -27,6 +30,10 @@ def test_general_prompt_includes_anti_copy_and_style(monkeypatch) -> None:
     assert ENGLISH_NAMES_LINE in content
     assert PROGRAMMING_STYLES[1][1] in content
     assert PROGRAMMING_STYLES[0][1] not in content
+    assert TUTOR_VOICE_FEMALE in content
+    male = build_general_tutor_messages("Fragment ဆိုတာ ဘာလဲ?", voice="male")[0]["content"]
+    assert TUTOR_VOICE_MALE in male
+    assert TUTOR_VOICE_FEMALE not in male
 
 
 def test_miit_prompt_anti_copy_without_programming_styles(monkeypatch) -> None:
@@ -44,7 +51,7 @@ def test_miit_prompt_anti_copy_without_programming_styles(monkeypatch) -> None:
     assert MIIT_FOCUS_LINE in content
     assert "ပါမောက္ခ ကို ပထမဝါကျမှာ တစ်ကြိမ်သာ သုံးပါ" in MIIT_FOCUS_LINE
     assert "Dr. Cynthia Myint နှင့် Dr. Sin Thi Yar Myint ကို တစ်ဝါကျတည်း မထပ်ရေးပါနှင့်" in MIIT_FOCUS_LINE
-    assert MIIT_PAPERS_LINE in content
+    assert MIIT_PAPERS_LINE not in content
     assert MIIT_PROGRAM_LINE in content
     assert "နှစ်ကျော်မသွားပါနှင့်" in MIIT_PROGRAM_LINE
     assert "အပြည့်အစုံ မေးမှသာ" not in MIIT_PROGRAM_LINE
@@ -58,6 +65,19 @@ def test_miit_prompt_anti_copy_without_programming_styles(monkeypatch) -> None:
     assert "ခန့်မှန်းမရေးပါနှင့်" in content
     assert "Cynthia Myint teaches at MIIT." in content
     assert "https://example.com/cynthia" in content
+
+
+def test_miit_overview_prompt_prefers_identity_line(monkeypatch) -> None:
+    monkeypatch.setattr("tutor.prompts.secrets.choice", lambda seq: seq[0])
+    chunk = KnowledgeChunk(
+        id="institute-overview",
+        text="MIIT Mandalay 2015",
+        sources=("https://example.com/miit",),
+        tokens=frozenset(),
+    )
+    content = build_miit_messages("MIIT ဆိုတာ ဘာလဲ?", [chunk])[0]["content"]
+    assert MIIT_OVERVIEW_LINE in content
+    assert MIIT_PROGRAM_LINE not in content
 
 
 def test_miit_followup_uses_continue_style(monkeypatch) -> None:

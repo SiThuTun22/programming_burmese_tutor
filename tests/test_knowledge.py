@@ -4,16 +4,22 @@ from __future__ import annotations
 
 import numpy as np
 
+from tutor import config
 from tutor.knowledge import (
     CURRICULUM_TOP_K,
+    INTENT_ADMISSION,
+    INTENT_OVERVIEW,
     IndexedChunk,
     MiitIndex,
     PAPER_TOP_K,
     effective_miit_limit,
     load_miit_chunks,
+    looks_like_admission,
     looks_like_curriculum,
+    looks_like_institute_overview,
     looks_like_miit,
     looks_like_papers,
+    miit_retrieval_intent,
     rank_by_embeddings,
     retrieve_miit_embed,
     retrieve_miit_token,
@@ -123,6 +129,53 @@ def test_looks_like_papers_on_detail_question() -> None:
     assert not looks_like_papers("Cynthia Myint ဆိုတာ ဘယ်သူလဲ?")
 
 
+def test_miit_overview_intent_classifiers() -> None:
+    assert looks_like_institute_overview("MIIT ဆိုတာ ဘာလဲ?")
+    assert looks_like_institute_overview("what is MIIT")
+    assert miit_retrieval_intent("MIIT ဆိုတာ ဘာလဲ?") == INTENT_OVERVIEW
+    assert looks_like_admission("MIIT ဘွဲ့ကြို ဝင်ခွင့် ဦးရေ ဘယ်လောက်လဲ။")
+    assert miit_retrieval_intent("MIIT ဘွဲ့ကြို ဝင်ခွင့် ဦးရေ ဘယ်လောက်လဲ။") == INTENT_ADMISSION
+    assert not looks_like_institute_overview("Cynthia Myint ဆိုတာ ဘယ်သူလဲ?")
+    assert miit_retrieval_intent("Cynthia Myint ဆိုတာ ဘယ်သူလဲ?") is None
+
+
+def test_overview_embed_returns_institute_chunks_only() -> None:
+    vec = (1.0, 0.0)
+    index = MiitIndex(
+        embed_model="test",
+        built_at="",
+        chunks=(
+            IndexedChunk(
+                id="institute-overview",
+                text="MIIT Mandalay NCoE founded 2015",
+                sources=(),
+                embedding=vec,
+            ),
+            IndexedChunk(
+                id="admission-bachelor-exam",
+                text="MIIT entrance exam 60 40 weight 120 seats",
+                sources=(),
+                embedding=vec,
+            ),
+        ),
+    )
+
+    def fake_embed(texts: list[str]) -> list[list[float]]:
+        del texts
+        return [[1.0, 0.0]]
+
+    result = retrieve_miit_embed(
+        "MIIT ဆိုတာ ဘာလဲ?",
+        index=index,
+        min_similarity=0.5,
+        embed_fn=fake_embed,
+    )
+    ids = [chunk.id for chunk in result.chunks]
+    assert ids
+    assert all(chunk_id.startswith("institute-") for chunk_id in ids)
+    assert "institute-overview" in ids
+
+
 def test_looks_like_curriculum_on_semester_question() -> None:
     assert looks_like_curriculum("CSE year 1 semester courses")
     assert looks_like_curriculum(
@@ -182,7 +235,7 @@ def test_papers_question_retrieves_five_chunks() -> None:
         min_similarity=0.5,
         embed_fn=fake_embed,
     )
-    assert len(who.chunks) == 3
+    assert len(who.chunks) == config.MIIT_TOP_K
 
 
 def _index_n_same_vector(n: int) -> MiitIndex:
@@ -223,7 +276,7 @@ def test_curriculum_question_retrieves_twelve_chunks() -> None:
         min_similarity=0.5,
         embed_fn=fake_embed,
     )
-    assert len(who.chunks) == 3
+    assert len(who.chunks) == config.MIIT_TOP_K
 
 
 def test_institute_overview_loads_from_disk() -> None:

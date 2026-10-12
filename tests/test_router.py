@@ -5,7 +5,7 @@ from tutor.router import classify_route, clear_route_cache, set_route_generate_f
 
 def test_classify_parses_json(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     set_route_generate_fn(lambda messages, **kwargs: '{"route":"programming"}')
     try:
@@ -17,14 +17,14 @@ def test_classify_parses_json(tmp_path, monkeypatch) -> None:
 
 
 def test_classify_skips_ambiguous_without_key_or_inject(monkeypatch) -> None:
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     set_route_generate_fn(None)
     clear_route_cache()
     assert classify_route("hello there") is None
 
 
 def test_rules_miit_without_llm(monkeypatch) -> None:
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     set_route_generate_fn(None)
     clear_route_cache()
     assert classify_route("Cynthia Myint ဆိုတာ ဘယ်သူလဲ?") == "miit"
@@ -32,7 +32,7 @@ def test_rules_miit_without_llm(monkeypatch) -> None:
 
 def test_binary_search_is_programming_even_if_llm_says_other(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
     try:
@@ -48,7 +48,7 @@ def test_binary_search_is_programming_even_if_llm_says_other(tmp_path, monkeypat
 
 def test_non_ce_theory_is_other(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
     try:
@@ -62,7 +62,7 @@ def test_non_ce_theory_is_other(tmp_path, monkeypatch) -> None:
 
 def test_ohms_law_is_programming_even_if_llm_says_other(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
     try:
@@ -75,7 +75,7 @@ def test_ohms_law_is_programming_even_if_llm_says_other(tmp_path, monkeypatch) -
 
 def test_weather_stays_other(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
     try:
@@ -86,7 +86,7 @@ def test_weather_stays_other(tmp_path, monkeypatch) -> None:
 
 
 def test_followup_inherits_miit_without_llm(monkeypatch) -> None:
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     set_route_generate_fn(None)
     clear_route_cache()
     history = [{"question": "Cynthia Myint ဆိုတာ ဘယ်သူလဲ?", "answer": "MIIT professor"}]
@@ -97,7 +97,7 @@ def test_cse_more_followup_stays_miit_even_if_llm_says_other(
     tmp_path, monkeypatch
 ) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     called = {"n": 0}
 
@@ -122,7 +122,7 @@ def test_cse_more_followup_stays_miit_even_if_llm_says_other(
 
 def test_second_followup_walks_back_to_cse_topic(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path)
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     clear_route_cache()
     called = {"n": 0}
 

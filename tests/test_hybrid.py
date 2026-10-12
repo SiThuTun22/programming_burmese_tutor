@@ -10,7 +10,7 @@ from tutor.router import clear_route_cache, set_route_generate_fn
 
 @pytest.fixture(autouse=True)
 def _reset_router(monkeypatch, tmp_path) -> None:
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     monkeypatch.setattr("tutor.router.ROUTER_CACHE_DIR", tmp_path / "router")
     set_route_generate_fn(None)
     clear_route_cache()
@@ -77,9 +77,22 @@ def test_create_engine_returns_hybrid(monkeypatch) -> None:
     class Dummy:
         pass
 
+    monkeypatch.setattr("tutor.config.TUTOR_BACKEND", "hybrid")
     monkeypatch.setattr(hy, "HybridEngine", Dummy)
     created = hy.create_engine()
     assert isinstance(created, Dummy)
+
+
+def test_create_engine_returns_aaa_when_configured(monkeypatch) -> None:
+    from tutor import hybrid as hy
+
+    class DummyAAA:
+        pass
+
+    monkeypatch.setattr("tutor.config.TUTOR_BACKEND", "aaa")
+    monkeypatch.setattr("tutor.aaa_engine.AAAEngine", DummyAAA)
+    created = hy.create_engine()
+    assert isinstance(created, DummyAAA)
 
 
 def test_any_question_uses_general_prompt() -> None:
@@ -160,7 +173,7 @@ def test_typo_cynthia_uses_miit_when_embed_matches(monkeypatch) -> None:
         assert "Cynthida" in question
         return RetrieveResult(chunks=[chunk], best_score=0.91)
 
-    monkeypatch.setattr("tutor.hybrid.retrieve_miit", fake_retrieve)
+    monkeypatch.setattr("tutor.specialists.retrieve_miit", fake_retrieve)
     captured: list[str] = []
 
     def generate(messages: list[dict]) -> str:
@@ -280,10 +293,12 @@ def test_classifier_other_skips_chat_generate() -> None:
     from tutor.router import OUT_OF_SCOPE_ANSWER, clear_route_cache, set_route_generate_fn
 
     clear_route_cache()
-    set_route_generate_fn(lambda messages, **kwargs: '{"route":"other"}')
     calls = {"n": 0}
 
     def generate(messages: list[dict], **kwargs) -> str:
+        content = str(messages[0].get("content", ""))
+        if content.startswith("Classify the student question"):
+            return '{"route":"other"}'
         calls["n"] += 1
         return "SHOULD_NOT"
 
@@ -348,7 +363,7 @@ def test_classifier_binary_search_hits_chat_not_out_of_scope() -> None:
 
 
 def test_classifier_empty_key_uses_retrieve(monkeypatch) -> None:
-    monkeypatch.setattr("tutor.router.GEMINI_TTS_NAMES_API_KEY", "")
+    monkeypatch.setattr("tutor.router.resolved_gemini_api_keys", lambda: [])
     from tutor.router import clear_route_cache, set_route_generate_fn
 
     clear_route_cache()

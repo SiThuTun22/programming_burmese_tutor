@@ -7,7 +7,6 @@ from collections.abc import Callable
 from typing import Any, Protocol
 
 from tutor.config import HYBRID_DEBUG, generation_config
-from tutor.knowledge import retrieve_miit
 from tutor.prompts import (
     CONTINUE_STYLE,
     build_general_tutor_messages,
@@ -16,7 +15,13 @@ from tutor.prompts import (
     pick_programming_style,
     strip_answer_cue,
 )
-from tutor.router import OUT_OF_SCOPE_ANSWER, classify_route, inherit_thread_route
+from tutor.router import (
+    OUT_OF_SCOPE_ANSWER,
+    classify_route,
+    inherit_thread_route,
+    set_route_generate_fn,
+)
+from tutor.specialists import retrieve_specialists
 
 GenerateFn = Callable[..., str]
 
@@ -44,12 +49,14 @@ class HybridEngine:
             self._generate_fn = resolve_generate_fn()
         else:
             self._generate_fn = generate_fn
+        _wire_router_generate(self._generate_fn)
 
     def answer(
         self,
         question: str,
         code: str = "",
         history: list[dict] | None = None,
+        voice: str | None = None,
     ) -> str:
         classified = classify_route(question, code, history)
         if classified == "other":
@@ -66,11 +73,11 @@ class HybridEngine:
             passages = []
             result_score = None
         elif classified == "miit":
-            result = retrieve_miit(question, history=history)
+            result = retrieve_specialists(question, history=history)
             passages = result.chunks
             result_score = result.best_score
         else:
-            result = retrieve_miit(question, history=history)
+            result = retrieve_specialists(question, history=history)
             passages = result.chunks
             result_score = result.best_score
 
@@ -94,6 +101,7 @@ class HybridEngine:
                 code,
                 history,
                 delivery_style=(style_name, style_line),
+                voice=voice,
             )
         else:
             self.last_route = "gemini"
@@ -110,7 +118,11 @@ class HybridEngine:
                     flush=True,
                 )
             messages = build_general_tutor_messages(
-                question, code, history, delivery_style=(style_name, style_line)
+                question,
+                code,
+                history,
+                delivery_style=(style_name, style_line),
+                voice=voice,
             )
         return strip_answer_cue(self._call_generate(messages, sampling))
 
@@ -136,6 +148,16 @@ def _supports_sampling(fn: Callable[..., str]) -> bool:
     return "temperature" in params or "top_p" in params
 
 
+def _wire_router_generate(generate_fn: GenerateFn) -> None:
+    set_route_generate_fn(generate_fn)
+
+
 def create_engine(**kwargs: Any) -> HybridEngine:
+    from tutor.config import TUTOR_BACKEND
+
     del kwargs
+    if TUTOR_BACKEND == "aaa":
+        from tutor.aaa_engine import AAAEngine
+
+        return AAAEngine()
     return HybridEngine()
