@@ -1,54 +1,72 @@
 # Context-Aware Myanmar Language Tutor for Computer Engineering
 
-Burmese answers for **computer-engineering** (CSE/ECE) subject questions and coding via Gemini, plus MIIT notes (curriculum, admission, faculty, campus) via RAG. Default backend **`aaa`** uses LangGraph + pgvector (`knowledge/`). Set `TUTOR_BACKEND=hybrid` for the legacy local `index.json` path.
+Burmese tutoring for **computer engineering** (CSE/ECE) and MIIT campus knowledge (curriculum, admission, faculty) via Gemini + RAG.
+
+**Default stack:** `TUTOR_BACKEND=aaa` — LangGraph, Postgres chat sessions, pgvector over `knowledge/`. **UI:** React (`web/`) + Litestar API (`app/`). Set `TUTOR_BACKEND=hybrid` for the legacy local `data/miit/index.json` path (`make chat`).
 
 ## Quick start
 
 ```bash
 make sync
-cp .env.example .env   # GEMINI_API_KEYS, DATABASE_URL, JWT_SECRET, TUTOR_CORS_ORIGINS
-make db-up && make db-migrate && make db-ingest   # first run
+cp .env.example .env    # GEMINI_API_KEYS, JWT_SECRET, DATABASE_URL, TUTOR_CORS_ORIGINS
+make db-up && make db-migrate && make db-ingest   # first run (aaa)
 make preflight
 ```
 
-Run the stack in **two terminals**:
+Two terminals:
 
 ```bash
-make api    # Litestar AAA API → http://127.0.0.1:8001
-make web    # React UI → http://127.0.0.1:5173
+make api    # http://127.0.0.1:8001
+make web    # http://127.0.0.1:5173
 ```
 
-Register an account in the UI, start a chat, and ask questions. Use **Speak** on assistant replies for TTS (pause/resume toggles on the same button). Gemini may need a VPN where Google APIs are blocked.
+Register in the UI, start a chat, ask questions. **Speak** on assistant replies uses edge-tts (spinner while speech prefetch runs). VPN may be required for Gemini/edge-tts.
 
-After you edit `data/miit/*.jsonl`, run `make db-ingest` (aaa) or `make miit-index` (hybrid).
+After editing `data/miit/*.jsonl`: `make db-ingest` (aaa) or `make miit-index` (hybrid).
 
-Mac setup: [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md). Ask path: [docs/WORKFLOW.md](docs/WORKFLOW.md).
+## Documentation
+
+| For | Read |
+|-----|------|
+| Client / product | [docs/client/PROJECT_GUIDE.md](docs/client/PROJECT_GUIDE.md) |
+| Install & run (step-by-step) | [docs/client/HOW_TO_RUN.md](docs/client/HOW_TO_RUN.md) |
+| Developers / API | [docs/client/TECHNICAL_REFERENCE.md](docs/client/TECHNICAL_REFERENCE.md) |
+| Maintainer pipeline index | [docs/WORKFLOW.md](docs/WORKFLOW.md) |
+| Quick laptop commands | [docs/LAPTOP_SETUP.md](docs/LAPTOP_SETUP.md) |
+| Environment variables | [.env.example](.env.example) |
+
+Thesis assets (`docs/NLP_Final_Report.docx`, `docs/*.pptx`) are separate deliverables.
 
 ## Surfaces
 
 | Surface | Command | Notes |
 |---------|---------|--------|
-| **React UI** | `make web` + `make api` | Default product UI |
-| **AAA API** | `make api` / `make serve-api` | Auth, sessions, messages, speech |
-| **Stateless API** | `uv run python -c "from tutor.api import app"` | `POST /v1/chat` only (see tutor/api.py) |
-| **CLI** | `make chat` | Interactive, no history |
+| **React UI** | `make web` + `make api` | Default product |
+| **AAA API** | `make api` | Auth, sessions, messages, speech, documents (upload API only) |
+| **Stateless API** | `uv run python -c "from tutor.api import app"` | `POST /v1/chat` — no session history |
+| **CLI** | `make chat` | One-shot, no Postgres |
 
 ## Frontend (`web/`)
 
-- Vite + React + TypeScript + Tailwind
-- `cd web && npm install && cp .env.example .env`
-- Dev proxy forwards `/api` and `/health` to port 8001
+```bash
+cd web && npm install && cp .env.example .env
+```
 
-Production: `cd web && npm run build` → serve `web/dist` (static hosting or future Litestar static mount).
+Dev proxy: `/api` → port 8001. See [web/README.md](web/README.md).
 
-## Makefile targets
+## Makefile
 
 | Target | Purpose |
 |--------|---------|
-| `make api` / `make serve-api` | AAA Litestar API |
-| `make web` | React dev server |
-| `make app` | Preflight + API (run `make web` separately) |
-| `make chat` | CLI |
-| `make test` | Python tests |
-| `make miit-index` | Hybrid index from JSONL |
-| `make db-ingest` | AAA knowledge ingest |
+| `make sync` | `uv sync --extra app --extra aaa` |
+| `make db-up` | Docker Postgres + pgvector (port 5435) |
+| `make db-migrate` | Alembic migrations |
+| `make db-ingest` | Load `knowledge/` into pgvector |
+| `make api` / `make serve-api` | Litestar AAA API |
+| `make web` | Vite dev server |
+| `make preflight` | Keys, backend, Gemini probe |
+| `make chat` | CLI tutor |
+| `make test` | pytest |
+| `make miit-index` | Hybrid `index.json` from JSONL |
+| `make smoke-hybrid` | Live hybrid smoke prompts |
+| `make eval` | Eval script |

@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 DEFAULT_DATABASE_URL = 'postgresql+asyncpg://aaa:aaa@localhost:5435/aaa'
 DEFAULT_JWT_SECRET = 'change-me-in-production'
-DEFAULT_GEMINI_MODEL = 'gemini-2.0-flash'
+DEFAULT_GEMINI_MODEL = 'gemini-3.1-flash-lite'
 DEFAULT_GEMINI_TIMEOUT_SECONDS = 120
 DEFAULT_GEMINI_MAX_TOKENS = 2048
 DEFAULT_GEMINI_VISION_MAX_TOKENS = 512

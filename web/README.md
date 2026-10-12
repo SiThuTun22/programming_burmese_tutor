@@ -1,32 +1,39 @@
-# React + TypeScript + Vite
+# Web UI (`web/`)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Vite + Tailwind chat client for the **Computer Engineering Tutor** AAA API.
 
-Currently, two official plugins are available:
+## Setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+cd web
+npm install
+cp .env.example .env   # optional; empty VITE_API_BASE_URL uses the dev proxy
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+From the **repo root** (separate terminal):
+
+```bash
+make api   # Litestar on port 8001
+```
+
+## Dev
+
+```bash
+npm run dev
+```
+
+Open http://localhost:5173 — register/login, sidebar chats, Ask, **Speak** (TTS with prefetch spinner), light/dark theme.
+
+`vite.config.ts` proxies `/api` and `/health` to `http://localhost:8001`.
+
+## Production build
+
+```bash
+npm run build
+```
+
+Serve `web/dist` behind your host; set `VITE_API_BASE_URL` to the public API origin at build time if the API is not same-origin.
+
+## Root configuration
+
+Gemini keys, Postgres, JWT, and CORS live in the repo root `.env` (see `../.env.example`). `TUTOR_CORS_ORIGINS` must include your web origin.
