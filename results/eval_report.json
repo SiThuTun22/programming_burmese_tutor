@@ -340,8 +340,8 @@
   "retrieval": {
     "n": 23,
     "k": 3,
-    "recall_at_3": 0.8696,
-    "mrr": 0.7754,
+    "recall_at_3": 0.8261,
+    "mrr": 0.7971,
     "rows": [
       {
         "id": "r-miit-1",
@@ -349,12 +349,12 @@
           "institute-overview"
         ],
         "ranked_ids": [
-          "admission-bachelor-contact",
-          "admission-bachelor-subjects",
-          "admission-bachelor-exam"
+          "institute-overview",
+          "institute-governance",
+          "institute-programs"
         ],
-        "recall_at_3": 0.0,
-        "mrr": 0.0
+        "recall_at_3": 1.0,
+        "mrr": 1.0
       },
       {
         "id": "r-miit-2",
@@ -375,12 +375,12 @@
           "institute-campus"
         ],
         "ranked_ids": [
-          "admission-bachelor-contact",
           "institute-campus",
-          "institute-overview"
+          "institute-overview",
+          "institute-governance"
         ],
         "recall_at_3": 1.0,
-        "mrr": 0.5
+        "mrr": 1.0
       },
       {
         "id": "r-miit-4",
@@ -389,8 +389,8 @@
         ],
         "ranked_ids": [
           "institute-overview",
-          "admission-bachelor-contact",
-          "institute-governance"
+          "institute-governance",
+          "institute-programs"
         ],
         "recall_at_3": 1.0,
         "mrr": 1.0
@@ -402,8 +402,8 @@
         ],
         "ranked_ids": [
           "institute-governance",
-          "admission-bachelor-contact",
-          "phyu-networks"
+          "institute-programs",
+          "institute-overview"
         ],
         "recall_at_3": 1.0,
         "mrr": 1.0
@@ -415,8 +415,8 @@
         ],
         "ranked_ids": [
           "institute-programs",
-          "admission-bachelor-contact",
-          "admission-bachelor-subjects"
+          "institute-overview",
+          "institute-governance"
         ],
         "recall_at_3": 1.0,
         "mrr": 1.0
@@ -518,12 +518,12 @@
           "phyu-role"
         ],
         "ranked_ids": [
-          "phyu-email",
-          "phyu-role",
-          "kyawt-email"
+          "institute-overview",
+          "institute-governance",
+          "institute-campus"
         ],
-        "recall_at_3": 1.0,
-        "mrr": 0.5
+        "recall_at_3": 0.0,
+        "mrr": 0.0
       },
       {
         "id": "r-miit-15",
@@ -583,12 +583,12 @@
           "institute-campus"
         ],
         "ranked_ids": [
-          "admission-bachelor-contact",
           "institute-campus",
-          "institute-overview"
+          "institute-overview",
+          "institute-programs"
         ],
         "recall_at_3": 1.0,
-        "mrr": 0.5
+        "mrr": 1.0
       },
       {
         "id": "r-fu-5",
@@ -635,19 +635,19 @@
           "ece-y2-s1"
         ],
         "ranked_ids": [
-          "ece-y2-s1",
-          "ece-y5-s2",
-          "ece-overview"
+          "institute-programs",
+          "institute-overview",
+          "institute-campus"
         ],
-        "recall_at_3": 1.0,
-        "mrr": 1.0
+        "recall_at_3": 0.0,
+        "mrr": 0.0
       }
     ]
   },
   "generation": {
     "n": 14,
     "exact_match": 0.6429,
-    "token_f1": 0.0839,
+    "token_f1": 0.0449,
     "rows": [
       {
         "id": "r-miit-1",
@@ -656,7 +656,7 @@
         ],
         "em": 0.0,
         "token_f1": 0.0,
-        "answer_preview": "MIIT သည် မြန်မာနိုင်ငံရှိ အင်စတီကျုတစ်ခု ဖြစ်သည်။ MIIT တွင် ဘွဲ့ကြိုသင်တန်းများ တက်ရောက်ရန်အတွက် တက္ကသိုလ်ဝင်တန်းတွင် သင်္ချာ၊ ရူပဗေဒ၊ ဓာတုဗေဒ နှင့် အင်္ဂလိပ်စာ ဘာသာရပ်များ ပါဝင်အောင်မြင်ထားရန် လိုအပ်သည်။ ဝင်ခွင့်ရွေးချယ်ရာတွင် တက္ကသိုလ်ဝင်"
+        "answer_preview": "MIIT ဆိုသည်မှာ Myanmar Institute of Information Technology ဖြစ်ပြီး မြန်မာနိုင်ငံနှင့် အိန္ဒိယနိုင်ငံတို့အကြား နားလည်မှုစာချုပ်ဖြင့် တည်ထောင်ထားသော အဆင့်မြင့်နည်းပညာတက္ကသိုလ်တစ်ခု ဖြစ်ပါတယ်။ ဤတက္ကသိုလ်ကို အိန္ဒိယနိုင်ငံရှိ IIIT-B ကို ပုံစံယ"
       },
       {
         "id": "r-miit-2",
@@ -664,17 +664,17 @@
           "Win Aye"
         ],
         "em": 1.0,
-        "token_f1": 0.0678,
-        "answer_preview": "MIIT ၏ ပါမောက္ခချုပ်မှာ Dr. Win Aye ဖြစ်သည်။ သူသည် အစိုးရပိုင်ပုံစံဖြင့် လည်ပတ်နေသော MIIT ကို ဦးဆောင်လျက်ရှိသည်။  https://my.linkedin.com/edu/myanmar-institute-of-information-technology-%28miit%29-197015 https://www.miit.edu.mm/my/ https://"
+        "token_f1": 0.1333,
+        "answer_preview": "MIIT ၏ လက်ရှိ ပါမောက္ခချုပ်အကြောင်း အချက်အလက်မှာ အောက်ပါအတိုင်း ဖြစ်ပါတယ် -  *   နာမည် - Dr. Win Aye *   တာဝန် - ပါမောက္ခချုပ် (Rector) *   လုပ်ငန်းခွင် - Myanmar Institute of Information Technology (MIIT)၊ မန္တလေးမြို့  ကျွန်မတို့ကျောင်းရဲ"
       },
       {
         "id": "r-miit-3",
         "gold_spans": [
           "Mandalay"
         ],
-        "em": 1.0,
-        "token_f1": 0.0333,
-        "answer_preview": "MIIT ကျောင်းဝင်းသည် မန္တလေးမြို့၊ ချမ်းမြသာစည်မြို့နယ်၊ ၇၃ လမ်း၊ ငုရွှေဝါလမ်းတွင် တည်ရှိပါသည်။ ဤကျောင်းဝင်းကို ခေတ်မီဗိသုကာလက်ရာများဖြင့် တည်ဆောက်ထားပြီး လက်တွေ့လုပ်ဆောင်ရသည့် ပရောဂျက်အခြေပြု အင်ဂျင်နီယာလုပ်ငန်းများအတွက် လိုအပ်သော ခေတ်မီနည်"
+        "em": 0.0,
+        "token_f1": 0.0,
+        "answer_preview": "ကျွန်မတို့ရဲ့ MIIT ကျောင်းဝင်းကို မန္တလေးမြို့၊ ချမ်းမြသာစည်မြို့နယ်၊ ၇၃ လမ်း၊ ငုရွှေဝါလမ်းမှာ တည်ဆောက်ထားတာ ဖြစ်ပါတယ်။  သင်က MIIT မှာရှိတဲ့ အဆောက်အဦးတွေ ဒါမှမဟုတ် ဓာတ်ခွဲခန်းတွေအကြောင်းကိုရော ပိုပြီး သိချင်သေးသလားရှင်။"
       },
       {
         "id": "r-miit-4",
@@ -683,7 +683,7 @@
         ],
         "em": 0.0,
         "token_f1": 0.0,
-        "answer_preview": "MIIT ကို ၂၀၁၅ ခုနှစ်တွင် စတင်တည်ထောင်ခဲ့ပါသည်။  source: https://en.wikipedia.org/wiki/Myanmar_Institute_of_Information_Technology source: https://www.wikiwand.com/en/Myanmar_Institute_of_Information_Technology source: https://evendo.com/loc"
+        "answer_preview": "MIIT ကို ၂၀၁၅ ခုနှစ်မှာ စတင်တည်ထောင်ခဲ့တာဖြစ်ပါတယ်။  ကျောင်းရဲ့ ရည်ရွယ်ချက်က မြန်မာနိုင်ငံမှာ သတင်းအချက်အလက်နည်းပညာနဲ့ အင်ဂျင်နီယာပညာရေးကို မြှင့်တင်ပေးဖို့ ဖြစ်တယ်ဆိုရင်၊ ကျောင်းရဲ့ ပညာရေးစနစ်မှာ အရေးပါတဲ့ mentor institution အဖြစ် ဘယ်တက္ကသ"
       },
       {
         "id": "r-miit-5",
@@ -691,8 +691,8 @@
           "IIIT"
         ],
         "em": 1.0,
-        "token_f1": 0.0247,
-        "answer_preview": "IIIT-B သည် MIIT ၏ mentor institution အဖြစ် ဆောင်ရွက်လျက်ရှိပြီး ပညာရေးဆိုင်ရာ အစီအစဉ်များ၊ ဆရာ၊ ဆရာမများ လေ့ကျင့်သင်ကြားရေးနှင့် လုပ်ငန်းလည်ပတ်မှုများကို ကြီးကြပ်ကူညီပေးပါသည်။ MIIT ကို IIIT-B ၏ ပုံစံအတိုင်း တည်ဆောက်ထားခြင်း ဖြစ်ပါသည်။  http"
+        "token_f1": 0.0465,
+        "answer_preview": "ကျွန်မတို့ MIIT ကို တည်ထောင်ရာမှာ အိန္ဒိယနိုင်ငံက International Institute of Information Technology, Bangalore (IIIT-B) က mentor institution အဖြစ် တာဝန်ယူပြီး ပညာရေးဆိုင်ရာ ကိစ္စရပ်တွေ၊ ဆရာ/ဆရာမတွေရဲ့ လေ့ကျင့်သင်ကြားရေးနဲ့ လုပ်ငန်းလည်ပတ်မှု"
       },
       {
         "id": "r-miit-6",
@@ -700,17 +700,17 @@
           "CSE"
         ],
         "em": 1.0,
-        "token_f1": 0.0345,
-        "answer_preview": "MIIT တွင် ကွန်ပျူတာသိပ္ပံနှင့် အင်ဂျင်နီယာပညာရပ် (CSE) ဘာသာရပ်ဖြင့် အင်ဂျင်နီယာဘွဲ့ (B.E. Hons)၊ အီလက်ထရောနစ်နှင့် ဆက်သွယ်ရေးအင်ဂျင်နီယာပညာရပ် (ECE) ဘာသာရပ်ဖြင့် အင်ဂျင်နီယာဘွဲ့ (B.E. Hons)၊ ကွန်ပျူတာသိပ္ပံဘာသာရပ်ဖြင့် အင်ဂျင်နီယာမဟာဘွဲ့ (M"
+        "token_f1": 0.0625,
+        "answer_preview": "MIIT မှာ နိုင်ငံတကာစံနှုန်းတွေနဲ့အညီ သင်ကြားပေးနေတဲ့ ဘွဲ့ကြိုနဲ့ ဘွဲ့လွန်သင်တန်းတွေ ရှိပါတယ်။ ဘွဲ့ကြိုအဆင့်မှာတော့ CSE ဘာသာရပ်နဲ့ ECE ဘာသာရပ်အတွက် B.E. (Hons) ဘွဲ့တွေကို ပို့ချပေးနေပါတယ်။ ဘွဲ့လွန်အဆင့်အတွက်ဆိုရင်တော့ CSE ဘာသာရပ်နဲ့ဆိုင်တဲ့ "
       },
       {
         "id": "r-miit-8",
         "gold_spans": [
           "Electronics"
         ],
-        "em": 0.0,
-        "token_f1": 0.0,
-        "answer_preview": "ECE B.E. (Hons.) သည် MIIT တွင် ၅ နှစ်ကြာ သင်ကြားရပြီး စာသင်နှစ်ဝက် ၁၀ ခုဖြင့် ဖွဲ့စည်းထားသော အီလက်ထရောနစ်နှင့် ဆက်သွယ်ရေးအင်ဂျင်နီယာပညာရပ်ဆိုင်ရာ ဘွဲ့သင်တန်းတစ်ခု ဖြစ်ပါသည်။ သင်တန်းကာလအတွင်း ရူပဗေဒ၊ ဓာတုဗေဒနှင့် သင်္ချာဘာသာရပ်များအပြင် အီလက"
+        "em": 1.0,
+        "token_f1": 0.0282,
+        "answer_preview": "MIIT မှာ သင်ကြားတဲ့ B.E. (Hons.) ECE ဆိုတာ Electronics & Communications Engineering ဘာသာရပ်ကို ဆိုလိုတာပါ။  ဒီသင်တန်းက ၅ နှစ်ကြာမြင့်ပြီး semester ၁၀ ခုနဲ့ ဖွဲ့စည်းထားပါတယ် ။ အဓိကအားဖြင့် အခြေခံသိပ္ပံတွေဖြစ်တဲ့ ရူပဗေဒ၊ ဓာတုဗေဒ၊ သင်္ချာတို့အ"
       },
       {
         "id": "r-miit-9",
@@ -719,7 +719,7 @@
         ],
         "em": 0.0,
         "token_f1": 0.0,
-        "answer_preview": "MIIT ၏ ဘွဲ့ကြိုဝင်ခွင့်အတွက် ရွေးချယ်မည့် စုစုပေါင်းဦးရေမှာ ၁၂၀ ဦး ဖြစ်ပါသည်။ ထိုဦးရေ ၁၂၀ ကို ဖြေဆိုသူများ၏ စုစုပေါင်းရမှတ်အလိုက် အများဆုံးမှ အနည်းဆုံးသို့ အစဉ်လိုက် ရွေးချယ်သတ်မှတ်ခြင်း ဖြစ်ပါသည်။ ရွေးချယ်ခံရသူများအနက် အမှတ်အများဆုံး ပထမ ၆"
+        "answer_preview": "MIIT ဘွဲ့ကြိုဝင်ခွင့်အတွက် စုစုပေါင်း ကျောင်းသားဦးရေ ၁၂၀ ဦးကို လက်ခံရွေးချယ်ပေးသွားမှာ ဖြစ်ပါတယ်။ ဒီဦးရေထဲမှာမှ CSE ဘာသာရပ်အတွက် ၆၀ ဦးနဲ့ ECE ဘာသာရပ်အတွက် ၆၀ ဦးဆိုပြီး ခွဲဝေသတ်မှတ်ထားပါတယ်။  ဒီလိုမျိုး ဘာသာရပ်အလိုက် ဦးရေခွဲဝေပေးထားတဲ့အချက်က"
       },
       {
         "id": "r-miit-10",
@@ -728,7 +728,7 @@
         ],
         "em": 0.0,
         "token_f1": 0.0,
-        "answer_preview": "MIIT ၏ ဘွဲ့ကြိုဝင်ခွင့်တွင် CSE အတွက် နေရာ ၆၀ ကို သတ်မှတ်ထားပါသည်။ MIIT တွင် စုစုပေါင်း ကျောင်းသား ၁၂၀ ဦးကို ရွေးချယ်ပြီး ၎င်းတို့အနက် အမှတ်အများဆုံးရရှိသူ ပထမ ၆၀ ဦးကို CSE ဘာသာရပ်အတွက် ခွဲဝေသတ်မှတ်ပေးခြင်း ဖြစ်ပါသည်။  https://www.miit.edu."
+        "answer_preview": "MIIT ရဲ့ ဘွဲ့ကြိုဝင်ခွင့်အတွက် စုစုပေါင်း ကျောင်းသား ၁၂၀ ဦးကို ရွေးချယ်ရာမှာ CSE ဘာသာရပ်အတွက် နေရာ ၆၀ ကို သတ်မှတ်ထားပါတယ်ရှင်။  ကျောင်းဝင်ခွင့်ရဖို့အတွက် တက္ကသိုလ်ဝင်တန်းရမှတ်နဲ့ ဝင်ခွင့်စာမေးပွဲရမှတ်ကို ဘယ်လိုရာခိုင်နှုန်းတွေနဲ့ တွက်ချက်သတ"
       },
       {
         "id": "r-miit-11",
@@ -736,8 +736,8 @@
           "Cynthia"
         ],
         "em": 1.0,
-        "token_f1": 0.0282,
-        "answer_preview": "ပါမောက္ခ Dr. Cynthia Myint သည် MIIT တွင် ပါမောက္ခအဖြစ် တာဝန်ထမ်းဆောင်နေသော ကွန်ပျူတာသိပ္ပံနှင့် သတင်းအချက်အလက်နည်းပညာဆိုင်ရာ သုတေသီတစ်ဦး ဖြစ်ပါသည်။ သူမကို Dr. Sin Thi Yar Myint ဟုလည်း ခေါ်ဆိုကြပြီး မြန်မာနိုင်ငံ၊ မန္တလေးမြို့တွင် အခြေစိုက်လ"
+        "token_f1": 0.0238,
+        "answer_preview": "ကျွန်မတို့ MIIT မှ ပါမောက္ခ Dr. Cynthia Myint (သို့မဟုတ် Dr. Sin Thi Yar Myint) အကြောင်း သိရှိလိုပါက အောက်ပါအချက်အလက်များကို ကြည့်ရှုနိုင်ပါတယ်ရှင်။  *   **အမည်** - Dr. Cynthia Myint (Dr. Sin Thi Yar Myint) *   **ရာထူး** - ပါမောက္ခ (Profess"
       },
       {
         "id": "r-miit-12",
@@ -745,8 +745,8 @@
           "NLP"
         ],
         "em": 1.0,
-        "token_f1": 0.0278,
-        "answer_preview": "ပါမောက္ခ Dr. Cynthia Myint သည် MIIT တွင် ပါမောက္ခအဖြစ် တာဝန်ထမ်းဆောင်နေသော သုတေသီတစ်ဦး ဖြစ်ပါသည်။ သူမ၏ သုတေသနစိတ်ဝင်စားမှုများသည် Natural Language Processing (NLP)၊ ကွန်ပျူတာသုံး ဘာသာဗေဒ (computational linguistics) နှင့် မြန်မာစာရေးသားပုံစန"
+        "token_f1": 0.0222,
+        "answer_preview": "ပါမောက္ခ Dr. Cynthia Myint (သို့မဟုတ် Dr. Sin Thi Yar Myint) သည် မြန်မာနိုင်ငံ၊ မန္တလေးမြို့ရှိ Myanmar Institute of Information Technology (MIIT) တွင် ပါမောက္ခအဖြစ် တာဝန်ထမ်းဆောင်နေသော သုတေသီတစ်ဦး ဖြစ်ပါသည်ပါ။  သူမ၏ သုတေသနနယ်ပယ်များမှာ Nat"
       },
       {
         "id": "r-miit-13",
@@ -754,8 +754,8 @@
           "kyawt_kyawt_htay@miit.edu.mm"
         ],
         "em": 1.0,
-        "token_f1": 0.3871,
-        "answer_preview": "Dr. Kyawt Kyawt Htay ၏ တရားဝင် အီးမေးလ်မှာ kyawt_kyawt_htay@miit.edu.mm ဖြစ်ပါသည်။ သူမသည် MIIT တွင် Professor အဖြစ် တာဝန်ထမ်းဆောင်နေသူ ဖြစ်ပါသည်။  source: MIIT Faculty Directory"
+        "token_f1": 0.1481,
+        "answer_preview": "Dr. Kyawt Kyawt Htay နှင့် ပတ်သက်သည့် အချက်အလက်များကို အောက်ပါဇယားတွင် ဖော်ပြပေးလိုက်ပါတယ်။  | အချက်အလက် | အသေးစိတ် | |---|---| | အမည် | Dr. Kyawt Kyawt Htay | | လုပ်ငန်းခွင် | Myanmar Institute of Information Technology (MIIT)၊ ကွန်ပျူတာသိ"
       },
       {
         "id": "r-miit-14",
@@ -763,8 +763,8 @@
           "Lecturer"
         ],
         "em": 1.0,
-        "token_f1": 0.0328,
-        "answer_preview": "Dr. Phyu Thwe သည် MIIT ၏ Faculty of Information Science / Computer Science Engineering တွင် Lecturer အဖြစ် တာဝန်ထမ်းဆောင်နေသူ ဖြစ်ပါသည်။ သူမသည် ၂၀၁၈ ခုနှစ် ဒီဇင်ဘာလမှစတင်၍ MIIT တွင် ပညာရပ်ဆိုင်ရာ ဝန်ဆောင်မှုများကို ပေးအပ်လျက်ရှိပါသည်။ ယခင်က"
+        "token_f1": 0.0164,
+        "answer_preview": "Dr. Phyu Thwe သည် မန္တလေးမြို့ရှိ Myanmar Institute of Information Technology (MIIT)၊ Faculty of Information Science / Computer Science Engineering တွင် Lecturer အဖြစ် တာဝန်ထမ်းဆောင်နေသော ပညာရှင်တစ်ဦး ဖြစ်ပါသည်။ သူမသည် ၂၀၁၈ ခုနှစ် ဒီဇင်ဘာလမ"
       },
       {
         "id": "r-miit-16",
@@ -772,8 +772,8 @@
           "tin_moh_moh_lwin@miit.edu.mm"
         ],
         "em": 1.0,
-        "token_f1": 0.5385,
-        "answer_preview": "Daw Tin Moh Moh Lwin ၏ တရားဝင် အီးမေးလ်မှာ tin_moh_moh_lwin@miit.edu.mm ဖြစ်ပါသည်။  MIIT Faculty Directory"
+        "token_f1": 0.1474,
+        "answer_preview": "Daw Tin Moh Moh Lwin ကတော့ မြန်မာနိုင်ငံ၊ မန္တလေးမြို့ရှိ Myanmar Institute of Information Technology (MIIT) နှင့် ပူးပေါင်းဆောင်ရွက်နေတဲ့ သုတေသီတစ်ဦး ဖြစ်ပါတယ်။ သူမက M.C.Tech ဘွဲ့ ရရှိထားပြီး မြန်မာနိုင်ငံ အဆင့်မြင့်ပညာရေး နည်းပညာကွန်ရက်၊ "
       }
     ]
   }

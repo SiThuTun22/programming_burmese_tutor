@@ -4,6 +4,9 @@ version = "0.3.0"
 description = "MIIT programming tutor. Gemini answers programming questions in Burmese. MIIT faculty and curriculum use embedding retrieval over local notes."
 readme = "README.md"
 requires-python = ">=3.12"
+dependencies = [
+    "matplotlib>=3.11.2",
+]
 
 [project.optional-dependencies]
 app = [

@@ -1905,6 +1905,9 @@ wheels = [
 name = "myanmar-programming-tutor"
 version = "0.3.0"
 source = { virtual = "." }
+dependencies = [
+    { name = "matplotlib" },
+]
 
 [package.optional-dependencies]
 aaa = [
@@ -1952,6 +1955,7 @@ requires-dist = [
     { name = "langchain-google-genai", marker = "extra == 'aaa'", specifier = ">=2.0.0" },
     { name = "langgraph", marker = "extra == 'aaa'", specifier = ">=0.2.0" },
     { name = "litestar", marker = "extra == 'app'", specifier = ">=2.0" },
+    { name = "matplotlib", specifier = ">=3.11.2" },
     { name = "matplotlib", marker = "extra == 'report'", specifier = ">=3.8.0" },
     { name = "numpy", marker = "extra == 'app'", specifier = ">=1.26.0" },
     { name = "pgvector", marker = "extra == 'aaa'", specifier = ">=0.3.0" },
